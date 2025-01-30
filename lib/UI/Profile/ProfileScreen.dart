@@ -16,7 +16,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
-  Map<String, dynamic>? studentData;
+  Map<String, dynamic>? teacherData;
+
   bool isLoading = true;
   late AnimationController _controller;
 
@@ -54,7 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
-        studentData = data['student'];
+        teacherData = data['teacher'];
         isLoading = false;
         _controller.forward(); // Start animation once data is loaded
       });
@@ -137,7 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(20),
                         child: Image.network(
-                          studentData!['photo'] ?? '', // Use an empty string if the photo is null
+                          teacherData?['photo'] ?? '', // Use an empty string if the photo is null
                           fit: BoxFit.fill,
                           errorBuilder: (context, error, stackTrace) {
                             // This widget will be displayed if the image fails to load
@@ -172,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               const SizedBox(height: 10),
 
                               Text(
-                                studentData!['student_name'],
+                                '${teacherData?['first_name']??''} ${teacherData?['last_name']??''}',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -181,7 +182,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                studentData!['email'],
+                                teacherData?['email']??'',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 14,
                                   color: Colors.white70,
@@ -189,7 +190,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                               ),
                               const SizedBox(height: 5),
                               Text(
-                                studentData!['contact_no'],
+                                teacherData?['phone']??'',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 14,
                                   color: Colors.white70,
@@ -206,49 +207,38 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 ),
               ),
 
-              // Hero(
-              //   tag: 'profile-pic',
-              //   child: CircleAvatar(
-              //     radius: 60,
-              //     backgroundImage: studentData!['photo'] != null
-              //         ? NetworkImage(studentData!['photo'])
-              //         : null,
-              //     child: studentData!['photo'] == null
-              //         ? Image.asset(
-              //       AppAssets.logo,  // Assuming AppAssets.logo is a string path to an asset
-              //       fit: BoxFit.cover,  // Ensures the logo fills the avatar space
-              //     )
-              //         : null,
-              //   ),
-              // ),
+
               const SizedBox(height: 20),
               _buildAnimatedSection('Personal Information', [
-                buildProfileRow('Name', studentData!['student_name']??''),
-                buildProfileRow('Date of Birth', studentData!['dob']??''),
+                buildProfileRow('Name', '${teacherData?['first_name']??''} ${teacherData?['last_name']??''}'),
+                buildProfileRow('Date of Birth', teacherData?['dob']??''),
+                buildProfileRow('Qualification', teacherData?['qualification']??''),
+                buildProfileRow('Experience', teacherData?['experience']??''),
                 buildProfileRow(
                   'Gender',
-                  studentData!['gender'] == '1' ? 'Male' : 'Female',
+                  teacherData?['gender'] == '1' ? 'Male' : 'Female',
                 ),
-                buildProfileRow('Nationality', studentData!['nationality']?? ''),
-                buildProfileRow('Blood Group', studentData!['blood_group']??''),
+                buildProfileRow('Nationality', teacherData?['nationality']?? ''),
+                buildProfileRow('Blood Group', teacherData?['blood_group']??''),
               ]),
-              const SizedBox(height: 20),
-              _buildAnimatedSection('Academic Information', [
-                buildProfileRow('Class', studentData!['class_name']),
-                buildProfileRow('Section', studentData!['section']?? ''),
-                buildProfileRow('Roll Number', studentData!['roll_no']??''),
-                buildProfileRow(
-                  'Registration Number',
-                  studentData!['registration_no']??'',
-                ),
-                buildProfileRow('Admission Number', studentData!['adm_no']??''),
-              ]),
+              // const SizedBox(height: 20),
+              // _buildAnimatedSection('Academic Information', [
+              //   buildProfileRow('Class', teacherData?['class_name']??''),
+              //   buildProfileRow('Section', teacherData?['section']?? ''),
+              //   buildProfileRow('Roll Number', teacherData?['roll_no']??''),
+              //   buildProfileRow(
+              //     'Registration Number',
+              //     teacherData?['registration_no']??'',
+              //   ),
+              //   buildProfileRow('Admission Number', teacherData?['adm_no']??''),
+              // ]),
               const SizedBox(height: 20),
               _buildAnimatedSection('Contact Information', [
-                buildProfileRow('Contact Person', studentData!['contact_person']??''),
-                buildProfileRow('Contact Number', studentData!['contact_no']??''),
-                buildProfileRow('Email', studentData!['email']??''),
-                buildProfileRow('Address', studentData!['address']??''),
+                buildProfileRow('Father Name', teacherData?['fs_name']??''),
+                buildProfileRow('Father Contact', teacherData?['fs_phone']??''),
+                buildProfileRow('Contact Number', teacherData?['phone']??''),
+                buildProfileRow('Email', teacherData?['email']??''),
+                buildProfileRow('Address', teacherData?['permanent_address']??''),
               ]),
               const SizedBox(height: 50),
             ],

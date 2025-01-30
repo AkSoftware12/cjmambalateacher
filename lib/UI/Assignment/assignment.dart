@@ -99,7 +99,46 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
         fontStyle: FontStyle.normal,
         color: AppColors.textwhite,
       ),
-          )),
+          ),
+        actions: [
+          Padding(
+            padding:  EdgeInsets.only(right: 18.0),
+            child: GestureDetector(
+                onTap: (){
+
+                },
+                child:Container(
+                  height: 30,
+                  decoration: BoxDecoration(
+                    color:Colors.purple.shade200,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(
+                      color: Colors.black, // You can change the color as needed
+                      width: 1,
+                    ),
+                  ),
+                  child:  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                        'UPLOAD',
+                        style: GoogleFonts.montserrat(
+                          textStyle: Theme.of(context).textTheme.displayLarge,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          fontStyle: FontStyle.normal,
+                          color: AppColors.textwhite,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+
+            ),
+          ),
+
+        ],
+      ),
       body: assignments.isNotEmpty?
 
 
@@ -109,7 +148,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
           final assignment = assignments[index];
           String description = html_parser.parse(assignment['description']).body?.text ?? '';
           String startDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(assignment['start_date']));
-          String endDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(assignment['due_date']));
+          String endDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(assignment['end_date']));
 
           return Card(
             margin: EdgeInsets.all(5),
@@ -121,7 +160,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
               side: BorderSide(
-                color: Colors.grey, // Border color
+                color: Colors.black, // Border color
                 width: 1,          // Border width
               ),
             ),
@@ -249,10 +288,10 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                           child: Container(
                             width: 100,
                             decoration: BoxDecoration(
-                              color:Colors.transparent,
+                              color:Colors.orange,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: Colors.white, // You can change the color as needed
+                                color: Colors.black, // You can change the color as needed
                                 width: 1,
                               ),
                             ),
@@ -282,10 +321,10 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                           child:Container(
                             width: 100,
                             decoration: BoxDecoration(
-                              color:Colors.transparent,
+                              color:Colors.blue,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: Colors.white, // You can change the color as needed
+                                color: Colors.black, // You can change the color as needed
                                 width: 1,
                               ),
                             ),
@@ -293,7 +332,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Center(
                                 child: Text(
-                                  'UPLOAD',
+                                  'UPDATE',
                                   style: GoogleFonts.montserrat(
                                     textStyle: Theme.of(context).textTheme.displayLarge,
                                     fontSize: 13,
@@ -311,10 +350,10 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                           child:      Container(
                             width: 100,
                             decoration: BoxDecoration(
-                              color:assignment['attendance_status']=='submitted'?Colors.green:HexColor('#780606'),
+                              color: Colors.redAccent,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: AppColors.textwhite, // You can change the color as needed
+                                color: AppColors.textblack, // You can change the color as needed
                                 width: 1,
                               ),
                             ),
@@ -322,7 +361,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                               padding: const EdgeInsets.all(8.0),
                               child: Center(
                                 child: Text(
-                                  assignment['attendance_status'].toString().toUpperCase(),
+                                  'DELETE'.toString().toUpperCase(),
                                   style: GoogleFonts.montserrat(
                                     textStyle: Theme.of(context).textTheme.displayLarge,
                                     fontSize: 13,

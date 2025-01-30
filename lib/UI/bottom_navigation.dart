@@ -13,7 +13,6 @@ import 'dart:convert';
 
 import 'Auth/login_screen.dart';
 import 'FAQ/faq.dart';
-import 'Fees/FeesScreen.dart';
 import 'Gallery/gallery_tab.dart';
 import 'Help/help.dart';
 import 'Library/LibraryScreen.dart';
@@ -34,7 +33,8 @@ class BottomNavBarScreen extends StatefulWidget {
 
 class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   int _selectedIndex = 0;
-  Map<String, dynamic>? studentData;
+  Map<String, dynamic>? teacherData;
+  // Map<String, dynamic>? teacherData;
   bool isLoading = true;
 
   // List of screens
@@ -43,7 +43,6 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     AttendanceScreen(),
     // AttendanceCalendar(),
     LibraryScreen(),
-    FeesScreen(),
     ProfileScreen(),
   ];
 
@@ -52,7 +51,6 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     AppStrings.homeLabel,
     AppStrings.attendanceLabel,
     AppStrings.libraryLabel,
-    AppStrings.feesLabel,
     AppStrings.profileLabel,
   ];
 
@@ -87,9 +85,9 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
-        studentData = data['student'];
+        teacherData = data['teacher'];
         isLoading = false;
-        print(studentData);
+        print(teacherData);
 
       });
     } else {
@@ -154,7 +152,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
               ),
             ),
             Text(
-              studentData?['student_name'] ?? 'Student', // Fallback to 'Student' if null
+              '${teacherData?['first_name']??'Teacher'} ${teacherData?['last_name']??''}' ?? 'Teacher', // Fallback to 'Student' if null
               style: GoogleFonts.montserrat(
                 textStyle: Theme.of(context).textTheme.displayLarge,
                 fontSize: 16,
@@ -238,11 +236,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
             label: AppStrings.libraryLabel,
             backgroundColor: AppColors.primary,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.currency_rupee),
-            label: AppStrings.feesLabel,
-            backgroundColor: AppColors.primary,
-          ),
+
           BottomNavigationBarItem(
             icon: Icon(CupertinoIcons.person_alt_circle_fill),
             label: AppStrings.profileLabel,
@@ -274,10 +268,10 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                 },
                 child: CircleAvatar(
                   radius: 40,
-                  backgroundImage: studentData != null && studentData?['photo'] != null
-                      ? NetworkImage(studentData?['photo'])
+                  backgroundImage: teacherData != null && teacherData?['photo'] != null
+                      ? NetworkImage(teacherData?['photo'])
                       : null,
-                  child: studentData == null || studentData?['photo'] == null
+                  child: teacherData == null || teacherData?['photo'] == null
                       ? Image.asset(AppAssets.logo, fit: BoxFit.cover)
                       : null,
 
@@ -293,7 +287,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                         shape: BoxShape.circle,
                       ),
                       child: Text(
-                        studentData?['student_name'] ?? 'Student', // Fallback to 'Student' if null
+                        '${teacherData?['first_name']??'Teacher'} ${teacherData?['last_name']??''}' ?? 'Teacher', // Fallback to 'Student' if null
                         style: GoogleFonts.montserrat(
                           textStyle: Theme.of(context).textTheme.displayLarge,
                           fontSize: 16,

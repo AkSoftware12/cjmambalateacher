@@ -32,7 +32,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Map<String, dynamic>? studentData;
+  Map<String, dynamic>? teacherData;
   List assignments = []; // Declare a list to hold API data
   bool isLoading = true;
   late CleanCalendarController calendarController;
@@ -75,7 +75,7 @@ class _HomeScreenState extends State<HomeScreen> {
       maxDate: DateTime.now().add(const Duration(days: 365)),
     );
     fetchStudentData();
-    fetchDasboardData();
+    // fetchDasboardData();
   }
 
   Future<void> fetchStudentData() async {
@@ -96,9 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       setState(() {
-        studentData = data['student'];
+        teacherData = data['teacher'];
         isLoading = false;
-        print(studentData);
+        print(teacherData);
       });
     } else {
       _showLoginDialog();
@@ -193,13 +193,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   CarouselExample(),
                   SizedBox(height: 10),
 
-                  CarouselFees(),
+                  // CarouselFees(),
 
                   // _buildsellAll('Promotions', 'See All'),
 
                   // PromotionCard(),
                   // _buildWelcomeHeader(),
-                  const SizedBox(height: 20),
+                  // const SizedBox(height: 20),
                   // _buildsellAll('Promotions', 'See All'),
 
                   _buildsellAll('Category', ''),
@@ -285,10 +285,10 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           CircleAvatar(
             radius: 30,
-            backgroundImage: studentData!['photo'] != null
-                ? NetworkImage(studentData!['photo'])
+            backgroundImage: teacherData!['photo'] != null
+                ? NetworkImage(teacherData!['photo'])
                 : null,
-            child: studentData!['photo'] == null
+            child: teacherData!['photo'] == null
                 ? Image.asset(AppAssets.logo, fit: BoxFit.cover)
                 : null,
           ),
@@ -305,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               Text(
-                studentData!['student_name'] ?? 'Student',
+                teacherData!['student_name'] ?? 'Student',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -325,10 +325,10 @@ class _HomeScreenState extends State<HomeScreen> {
         CircleAvatar(
           backgroundColor: Colors.white,
           radius: 20,
-          backgroundImage: studentData?['photo'] != null
-              ? NetworkImage(studentData!['photo'])
+          backgroundImage: teacherData?['photo'] != null
+              ? NetworkImage(teacherData!['photo'])
               : null,
-          child: studentData?['photo'] == null
+          child: teacherData?['photo'] == null
               ? Image.asset(AppAssets.logo, fit: BoxFit.cover)
               : null,
         ),
@@ -347,7 +347,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
             Text(
-              studentData?['student_name'] ?? 'Student',
+              teacherData?['student_name'] ?? 'Student',
               // Fallback to 'Student' if null
               style: GoogleFonts.montserrat(
                 textStyle: Theme.of(context).textTheme.displayLarge,
