@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.3.4 <4.0.0'
+  sdk: '>=3.3.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -54,6 +54,12 @@ dependencies:
   firebase_messaging: ^15.1.0
   firebase_core: ^3.4.0
   flutter_local_notifications: ^18.0.1
+  image_picker: ^1.1.2
+  file_picker: ^8.0.5
+  fluttertoast: ^8.2.8
+  syncfusion_flutter_datepicker: ^20.4.50
+  pdf: ^3.10.4
+  path_provider: ^2.1.1
 
 dev_dependencies:
   flutter_test:
@@ -69,7 +75,8 @@ dev_dependencies:
 
 flutter_icons:
     android: true
-    image_path: "assets/app_logo.png"
+    image_path: "assets/images/app_logo.png"
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

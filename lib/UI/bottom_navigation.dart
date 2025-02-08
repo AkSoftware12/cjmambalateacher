@@ -40,7 +40,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   // List of screens
   final List<Widget> _screens = [
     HomeScreen(),
-    AttendanceScreen(),
+    AttendanceTabScreen(),
+    // AttendanceScreen(),//
     // AttendanceCalendar(),
     LibraryScreen(),
     ProfileScreen(),
@@ -130,7 +131,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
               child: SizedBox(
                 height: 30,
                 width: 30,
-                child: Image.asset('assets/menu.png'),
+                child: Image.asset('assets/menu.png',color: AppColors.textblack,),
               ),
             ),
           ), // Ensure Scaffold is in context
@@ -148,7 +149,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 fontStyle: FontStyle.normal,
-                color: AppColors.textwhite,
+                color: AppColors.textblack,
               ),
             ),
             Text(
@@ -158,7 +159,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 fontStyle: FontStyle.normal,
-                color: AppColors.textwhite,
+                color: AppColors.textblack,
               ),
             ),
           ],
@@ -170,16 +171,16 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: AppColors.primary,
       drawerEnableOpenDragGesture: false,
 
 
 
       appBar: AppBar(
-        backgroundColor: AppColors.secondary,
+        backgroundColor: AppColors.primary,
         automaticallyImplyLeading: false,
         iconTheme: IconThemeData(
-          color: AppColors.textwhite
+          color: AppColors.textblack
         ),
         title: Column(
           children: [
@@ -203,7 +204,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                 child: Icon(
                   Icons.notification_add,
                   size: 26,
-                  color: Colors.white,
+                  color: AppColors.textblack,
                 )),
           )
 
@@ -215,7 +216,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: AppColors.primary,
-        selectedItemColor: AppColors.textwhite,
+        selectedItemColor: AppColors.textblack,
         unselectedItemColor: AppColors.grey,
           showSelectedLabels: true,  // ✅ Ensures selected labels are always visible
           showUnselectedLabels: true, // ✅ Ensures unselected labels are also visible
@@ -293,7 +294,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                           fontStyle: FontStyle.normal,
-                          color: AppColors.textwhite,
+                          color: AppColors.textblack,
                         ),
                       ),
                     ),
@@ -324,7 +325,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Dashboard',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -333,7 +334,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               height: 20,
                               width: 20,
                               color: AppColors.primary,
-                              child:Icon(Icons.dashboard,color: Colors.white,),
+                              child:Icon(Icons.dashboard,color:AppColors.textblack,),
 
 
               ),
@@ -365,7 +366,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Attendance',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -374,7 +375,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               height: 20,
                               width: 20,
                               color: AppColors.primary,
-                              child: Icon(CupertinoIcons.clock,color: Colors.white,),
+                              child: Icon(CupertinoIcons.clock,color:AppColors.textblack,),
 
                           ),
                             onTap: () {
@@ -410,7 +411,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Assignments',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -452,7 +453,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Fees',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -461,7 +462,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               height: 20,
                               width: 20,
                               color: AppColors.primary,
-                              child: Icon(Icons.currency_rupee,color: Colors.white,)
+                              child: Icon(Icons.currency_rupee,color:AppColors.textblack,)
 
 
                               // Image.asset(
@@ -503,7 +504,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Time Table',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -545,7 +546,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Report Card',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -554,7 +555,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               height: 20,
                               width: 20,
                               color: AppColors.primary,
-                              child: Icon(Icons.report,color: Colors.white,)
+                              child: Icon(Icons.report,color:AppColors.textblack,)
 
                               // Image.asset(
                               //   'assets/gallery.png',
@@ -592,7 +593,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Gallery',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -635,7 +636,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Notices',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -681,7 +682,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Help',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -690,7 +691,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                 height: 25,
                                 width: 25,
                                 child: Image.asset('assets/help.png',
-                                  color: Colors.white,
+                                  color:AppColors.textblack,
                                 )),
                             onTap: () {
                               Navigator.push(
@@ -718,7 +719,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'FAQs',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -726,7 +727,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                             trailing: Container(
                                 height: 20,
                                 width: 20,
-                                child: Image.asset('assets/faq.png')),
+                                child: Image.asset('assets/faq.png',color: AppColors.textblack,)),
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -752,7 +753,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Privacy',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -762,7 +763,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                 width: 20,
                                 child: Icon(
                                   Icons.privacy_tip,
-                                  color: Colors.white,
+                                  color:AppColors.textblack,
                                 )),
                             onTap: () {
                               Navigator.push(
@@ -793,7 +794,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Terms & Condition',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -803,7 +804,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                 width: 20,
                                 child: Icon(
                                   Icons.event_note_outlined,
-                                  color: Colors.white,
+                                  color:AppColors.textblack,
                                 )),
                             onTap: () {
                               Navigator.push(
@@ -837,7 +838,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                               'Logout',
                               style: GoogleFonts.cabin(
                                 textStyle: TextStyle(
-                                    color: Colors.white,
+                                    color:AppColors.textblack,
                                     fontSize: 15,
                                     fontWeight: FontWeight.normal),
                               ),
@@ -847,7 +848,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                 width: 20,
                                 child: Icon(
                                   Icons.logout,
-                                  color: Colors.white,
+                                  color:AppColors.textblack,
                                 )),
                             onTap: () async {
                               final prefs = await SharedPreferences.getInstance();

@@ -1,3 +1,4 @@
+import 'package:cjmambalateacher/UI/Assignment/upload_assignments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -33,7 +34,11 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
 
     fetchAssignmentsData();
   }
-
+  void _refresh() {
+    setState(() {
+      fetchAssignmentsData();
+    });
+  }
 
   Future<void> fetchAssignmentsData() async {
     final prefs = await SharedPreferences.getInstance();
@@ -105,7 +110,10 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
             padding:  EdgeInsets.only(right: 18.0),
             child: GestureDetector(
                 onTap: (){
-
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) =>  AssignmentUploadScreen(onReturn: _refresh)),
+                  );
                 },
                 child:Container(
                   height: 30,
@@ -272,7 +280,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                     children: [
                       GestureDetector(
                         onTap: () async {
-                          final Uri pdfUri = Uri.parse(assignment['attach'].toString());
+                          final Uri pdfUri = Uri.parse(assignment['attach_url'].toString());
                           if (await canLaunchUrl(pdfUri)) {
                             await launchUrl(pdfUri, mode: LaunchMode.externalApplication);
                           } else {
@@ -347,21 +355,23 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
 
                       ),
                       Center(
-                          child:      Container(
+                        child: GestureDetector(
+                          onTap: () => _showDeleteConfirmationDialog(assignment['id'].toString()), // Call delete confirmation
+                          child: Container(
                             width: 100,
                             decoration: BoxDecoration(
                               color: Colors.redAccent,
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
-                                color: AppColors.textblack, // You can change the color as needed
+                                color: AppColors.textblack,
                                 width: 1,
                               ),
                             ),
-                            child:  Padding(
+                            child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Center(
                                 child: Text(
-                                  'DELETE'.toString().toUpperCase(),
+                                  'DELETE'.toUpperCase(),
                                   style: GoogleFonts.montserrat(
                                     textStyle: Theme.of(context).textTheme.displayLarge,
                                     fontSize: 13,
@@ -372,8 +382,8 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
                                 ),
                               ),
                             ),
-                          )
-
+                          ),
+                        ),
                       ),
 
 
@@ -414,4 +424,73 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
       ),
     );
   }
+
+  void _showDeleteConfirmationDialog(String assignmentId) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Confirm Delete"),
+          content: Text("Are you sure you want to delete this assignment?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context), // Cancel
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close dialog
+                _deleteAssignment(assignmentId); // Call API
+              },
+              child: Text("Delete", style: TextStyle(color: Colors.red)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteAssignment(String assignmentId) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final token = prefs.getString('token'); // Retrieve Token
+      print("Token: $token");
+
+      String apiUrl = "${ApiRoutes.deleteAssignment}/$assignmentId"; // API URL
+
+      final response = await http.delete(
+        Uri.parse(apiUrl),
+        headers: {
+          "Authorization": "Bearer $token", // Include token
+          "Content-Type": "application/json",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print("Assignment Deleted Successfully!");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Assignment Deleted Successfully!")),
+        );
+        _refresh();
+
+        // Refresh List After Deletion
+        setState(() {
+          assignments.removeWhere((item) => item['id'] == assignmentId);
+        });
+
+      } else {
+        print("Failed to Delete: ${response.statusCode}");
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Failed to delete assignment")),
+        );
+      }
+    } catch (e) {
+      print("Error Deleting Assignment: $e");
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Error occurred while deleting")),
+      );
+    }
+  }
+
+
 }

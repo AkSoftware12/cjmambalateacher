@@ -49,10 +49,10 @@ class _HomeScreenState extends State<HomeScreen> {
       'name': 'Home Work',
       'image': 'assets/home_work.png',
     },
-    {
-      'name': 'Subject',
-      'image': 'assets/physics.png',
-    },
+    // {
+    //   'name': 'Subject',
+    //   'image': 'assets/physics.png',
+    // },
     {
       'name': 'News & Events',
       'image': 'assets/event_planner.png',
@@ -157,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: AppColors.primary,
 
       // appBar: AppBar(
       //   backgroundColor: AppColors.secondary,
@@ -301,7 +301,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textwhite,
+                  color: AppColors.textblack,
                 ),
               ),
               Text(
@@ -309,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textwhite,
+                  color: AppColors.textblack,
                 ),
               ),
             ],
@@ -343,7 +343,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 fontStyle: FontStyle.normal,
-                color: AppColors.textwhite,
+                color: AppColors.textblack,
               ),
             ),
             Text(
@@ -354,7 +354,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 fontStyle: FontStyle.normal,
-                color: AppColors.textwhite,
+                color: AppColors.textblack,
               ),
             ),
           ],
@@ -444,35 +444,37 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               }
             },
-            child: Card(
-              elevation: 5,
-              color: AppColors.primary,
-              // decoration: BoxDecoration(
-              //     borderRadius: BorderRadius.circular(10)
-              // ),
-              child: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      items[index]['image']!,
-                      height: 50, // Adjust the size as needed
-                      width: 50,
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      items[index]['name']!,
-                      style: GoogleFonts.montserrat(
-                        textStyle: Theme.of(context).textTheme.displayLarge,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w800,
-                        fontStyle: FontStyle.normal,
-                        color: AppColors.textwhite,
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        items[index]['image']!,
+                        height: 50, // Adjust the size as needed
+                        width: 50,
                       ),
-                    ),
-                  ],
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        items[index]['name']!,
+                        style: GoogleFonts.montserrat(
+                          textStyle: Theme.of(context).textTheme.displayLarge,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w800,
+                          fontStyle: FontStyle.normal,
+                          color: AppColors.textblack,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -533,7 +535,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       height: 50,
                       width: 50,
                       decoration: BoxDecoration(
-                        color: AppColors.textwhite,
+                        color: AppColors.textblack,
                         borderRadius: BorderRadius.circular(25),
                       ),
                       child: Center(
@@ -552,7 +554,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       style: GoogleFonts.montserrat(
                         fontSize: 16,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.textwhite,
+                        color: AppColors.textblack,
                       ),
                     ),
                     subtitle: Text(
@@ -599,7 +601,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontSize: 20,
               fontWeight: FontWeight.w700,
               fontStyle: FontStyle.normal,
-              color: AppColors.textwhite,
+              color: AppColors.textblack,
             ),
           ),
           Text(
@@ -609,7 +611,7 @@ class _HomeScreenState extends State<HomeScreen> {
               fontSize: 15,
               fontWeight: FontWeight.w900,
               fontStyle: FontStyle.normal,
-              color: AppColors.textwhite,
+              color: AppColors.textblack,
             ),
           ),
         ],
@@ -659,14 +661,14 @@ class SectionCard extends StatelessWidget {
                   style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: AppColors.textwhite),
+                      color: AppColors.textblack),
                 ),
               ],
             ),
             const SizedBox(height: 10),
             Text(
               content,
-              style: TextStyle(fontSize: 16, color: AppColors.textwhite),
+              style: TextStyle(fontSize: 16, color: AppColors.textblack),
             ),
             if (isCalendar) const SizedBox(height: 16),
             if (isCalendar)
@@ -674,18 +676,18 @@ class SectionCard extends StatelessWidget {
                 height: 300,
                 child: ScrollableCleanCalendar(
                   daySelectedBackgroundColor: AppColors.primary,
-                  dayBackgroundColor: AppColors.textwhite,
+                  dayBackgroundColor: AppColors.textblack,
                   daySelectedBackgroundColorBetween: AppColors.primary,
-                  dayDisableBackgroundColor: AppColors.textwhite,
-                  dayDisableColor: AppColors.textwhite,
+                  dayDisableBackgroundColor: AppColors.textblack,
+                  dayDisableColor: AppColors.textblack,
                   calendarController: calendarController!,
                   layout: Layout.DEFAULT,
                   monthTextStyle:
-                      TextStyle(fontSize: 18, color: AppColors.textwhite),
+                      TextStyle(fontSize: 18, color: AppColors.textblack),
                   weekdayTextStyle:
-                      TextStyle(fontSize: 16, color: AppColors.textwhite),
+                      TextStyle(fontSize: 16, color: AppColors.textblack),
                   dayTextStyle:
-                      TextStyle(fontSize: 14, color: AppColors.textwhite),
+                      TextStyle(fontSize: 14, color: AppColors.textblack),
                   padding: const EdgeInsets.all(8.0),
                 ),
               ),
@@ -964,7 +966,7 @@ class PromotionCard extends StatelessWidget {
           color: AppColors.secondary,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: AppColors.textwhite, // You can change the color as needed
+            color: AppColors.textblack, // You can change the color as needed
             width: 1,
           ),
         ),
@@ -975,7 +977,7 @@ class PromotionCard extends StatelessWidget {
               padding: const EdgeInsets.only(left: 18.0),
               child: Image.asset(
                 AppAssets.logo,
-                color: AppColors.textwhite,
+                color: AppColors.textblack,
               ),
             ),
             Padding(
@@ -991,7 +993,7 @@ class PromotionCard extends StatelessWidget {
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                       fontStyle: FontStyle.normal,
-                      color: AppColors.textwhite,
+                      color: AppColors.textblack,
                     ),
                   ),
                   SizedBox(
@@ -1018,7 +1020,7 @@ class PromotionCard extends StatelessWidget {
                             fontSize: 16,
                             fontWeight: FontWeight.w500,
                             fontStyle: FontStyle.normal,
-                            color: AppColors.textwhite,
+                            color: AppColors.textblack,
                           ),
                         ),
                       ),

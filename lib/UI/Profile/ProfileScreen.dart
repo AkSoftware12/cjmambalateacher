@@ -89,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secondary,
+      backgroundColor: AppColors.primary,
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.red,
         icon: const Icon(Icons.logout, color: Colors.white),
@@ -120,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 padding:  EdgeInsets.symmetric(vertical: 20, horizontal: 16),
                 decoration:  BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [AppColors.secondary, AppColors.secondary],
+                    colors: [AppColors.primary, AppColors.primary],
                   ),
                   borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
                   // border: Border.all(
@@ -177,7 +177,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                 style: GoogleFonts.montserrat(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white,
+                                  color:AppColors.textblack,
                                 ),
                               ),
                               const SizedBox(height: 5),
@@ -185,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                 teacherData?['email']??'',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 14,
-                                  color: Colors.white70,
+                                  color: Colors.grey,
                                 ),
                               ),
                               const SizedBox(height: 5),
@@ -193,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                                 teacherData?['phone']??'',
                                 style: GoogleFonts.montserrat(
                                   fontSize: 14,
-                                  color: Colors.white70,
+                                  color: Colors.grey,
                                 ),
                               ),
                               const SizedBox(height: 10),
@@ -255,7 +255,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
       curve: Curves.easeInOut,
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: AppColors.secondary,
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
@@ -270,7 +270,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         children: [
           Text(
             title,
-            style:  TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textwhite),
+            style:  TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textblack),
           ),
           const SizedBox(height: 10),
           Column(children: rows),
@@ -288,14 +288,14 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           children: [
             Text(
               "$label :",
-              style:  TextStyle(fontWeight: FontWeight.bold, color: AppColors.textwhite),
+              style:  TextStyle(fontWeight: FontWeight.bold, color: AppColors.textblack),
             ),
             const SizedBox(width: 10),  // Add some space between label and value
             Expanded(
               child: Text(
                 value.isNotEmpty ? value : 'N/A',
                 overflow: TextOverflow.visible,
-                style:  TextStyle(color: AppColors.textwhite),
+                style:  TextStyle(color: AppColors.textblack),
               ),
             ),
           ],
