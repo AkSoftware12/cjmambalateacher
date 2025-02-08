@@ -22,11 +22,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   List<Map<String, dynamic>> classes = [];
   List<Map<String, dynamic>> sections = [];
   List<Map<String, dynamic>> students = [];
-
+  DateTime selectedDate = DateTime.now();
   int? selectedClass;
   int? selectedSection;
   bool isLoading = true;
-  DateTime selectedDate = DateTime.now();
   Map<String, int> attendanceStatus = {}; // Using String for student_id
   List<String> studentIds = [];
   List<String> notes = [];
@@ -37,9 +36,20 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   void initState() {
     super.initState();
     fetchClassesAndSections();
+    _initializeDefaultDates();
   }
 
+  void _initializeDefaultDates() {
+    DateTime now = DateTime.now();
+
+    setState(() {
+      selectedDate = DateTime.now();
+    });
+  }
+
+
   Future<void> fetchClassesAndSections() async {
+
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
@@ -84,7 +94,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
       final response = await http.get(
         Uri.parse(
-            'https://apicjm.cjmambala.co.in/api/teacher-student-atttendance?class=$selectedClass&section=$selectedSection&date=$selectedDate'),
+            'https://apicjm.cjmambala.co.in/api/teacher-student-atttendance?class=$selectedClass&section=$selectedSection&date=${DateFormat('yyyy-MM-dd').format(selectedDate)}'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -93,26 +103,38 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
+        print("📢 API Response: $responseData"); // ✅ Log response for debugging
+
         setState(() {
-          students =
-          List<Map<String, dynamic>>.from(responseData['data']['students']);
-          attendanceStatus = {
-            for (var student in students)
-              student['student_id'].toString():
-              student['attendance_status'] ?? 0
-          };
+          students = List<Map<String, dynamic>>.from(responseData['data']['students']);
+
+          // Ensure attendanceStatus is correctly mapped
+          attendanceStatus.clear();
+          studentIds.clear();
+          attendances.clear();
+
+          for (var student in students) {
+            String studentId = student['student_id'].toString();
+            int status = student['attendance_status'] ?? 0;
+
+            attendanceStatus[studentId] = status;
+            studentIds.add(studentId);
+            attendances.add(status);
+          }
+
           isLoading = false;
         });
+
+        print("✅ Attendance Status Updated: $attendanceStatus");
       } else {
         throw Exception('Failed to load attendance data');
       }
     } catch (e) {
-      print('Error fetching attendance: $e');
-      setState(() {
-        isLoading = false;
-      });
+      print('❌ Error fetching attendance: $e');
+      setState(() => isLoading = false);
     }
   }
+
 
   Future<void> submitAttendance() async {
     try {

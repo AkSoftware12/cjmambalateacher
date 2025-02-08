@@ -46,7 +46,7 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
       String? token = prefs.getString('token');
 
       final response = await http.get(
-        Uri.parse('http://192.168.1.7/CJM/api/monthly-attendance'),
+        Uri.parse('https://apicjm.cjmambala.co.in/api/monthly-attendance'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -91,7 +91,7 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
 
       final response = await http.get(
         Uri.parse(
-            'http://192.168.1.7/CJM/api/monthly-attendance?class=$selectedClass&section=$selectedSection&start_date=$startDate&end_date=$endDate'),
+            'https://apicjm.cjmambala.co.in/api/monthly-attendance?class=$selectedClass&section=$selectedSection&start_date=$startDate&end_date=$endDate'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -254,77 +254,77 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
             SizedBox(height: 10),
 
             // Date Selection Row
-          Container(
-            padding: EdgeInsets.all(0),
-            // color: Colors.blue.shade50,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: () => _selectDateRange(context),
-                  icon: Icon(Icons.calendar_today),
-                  label: Text("Select Date Range"),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    foregroundColor: Colors.white,
+            Container(
+              padding: EdgeInsets.all(0),
+              // color: Colors.blue.shade50,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: () => _selectDateRange(context),
+                    icon: Icon(Icons.calendar_today),
+                    label: Text("Select Date Range"),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.white,
+                    ),
                   ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(12),
-                  margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.2),
-                        blurRadius: 5,
-                        spreadRadius: 2,
-                        offset: Offset(0, 3),
-                      ),
-                    ],
+                  Container(
+                    padding: EdgeInsets.all(12),
+                    margin: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.2),
+                          blurRadius: 5,
+                          spreadRadius: 2,
+                          offset: Offset(0, 3),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "From: ",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                            ),
+                            Text(
+                              startDate != null
+                                  ? DateFormat('dd-MM-yyyy').format(startDate!)
+                                  : "Select Start Date",
+                              style: TextStyle(fontSize: 16, color: Colors.black87,fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 5), // Adds spacing
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "To: ",
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey),
+                            ),
+                            Text(
+                              endDate != null
+                                  ? DateFormat('dd-MM-yyyy').format(endDate!)
+                                  : "Select End Date",
+                              style: TextStyle(fontSize: 16, color: Colors.black87,fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "From: ",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey),
-                          ),
-                          Text(
-                            startDate != null
-                                ? DateFormat('dd-MM-yyyy').format(startDate!)
-                                : "Select Start Date",
-                            style: TextStyle(fontSize: 16, color: Colors.black87,fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 5), // Adds spacing
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "To: ",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.blueGrey),
-                          ),
-                          Text(
-                            endDate != null
-                                ? DateFormat('dd-MM-yyyy').format(endDate!)
-                                : "Select End Date",
-                            style: TextStyle(fontSize: 16, color: Colors.black87,fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
 
-              ],
+                ],
+              ),
             ),
-          ),
             Expanded(
               child: isLoading
                   ? Center(child: CircularProgressIndicator())
@@ -333,38 +333,60 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
                   : SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: DataTable(
+                  border: TableBorder.all(color: Colors.black, width: 1), // Table Borders
                   columns: [
-                    DataColumn(label: Text("Student Name")),
-                    ...dates.map((date) => DataColumn(label: Text(date))).toList(),
+                    DataColumn(
+                      label: Center(
+                        child: Text(
+                          "Student Name",
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                    ...dates.map((date) => DataColumn(
+                      label: Center(
+                        child: Text(
+                          date,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )).toList(),
                   ],
                   rows: students.map((student) {
                     return DataRow(
                       cells: [
-                        DataCell(Text(student["name"] ?? "Unknown")),
+                        DataCell(
+                          Center(
+                            child: Text(
+                              student["name"] ?? "Unknown",
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                         ...dates.map((date) {
                           return DataCell(
-                            Container(
-                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: _getAttendanceColor(student["attendance"]?[date]),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                _mapAttendanceStatus(student["attendance"]?[date]),
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
+                            Center(
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: _getAttendanceColor(student["attendance"]?[date]),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  _mapAttendanceStatus(student["attendance"]?[date]),
+                                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
                             ),
                           );
-
-
                         }).toList(),
                       ],
                     );
                   }).toList(),
                 ),
               ),
-            ),
+            )
           ],
         ),
       ),
