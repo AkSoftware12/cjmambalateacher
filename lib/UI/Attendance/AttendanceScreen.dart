@@ -1,49 +1,46 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
-import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:path_provider/path_provider.dart';
-
 import 'attendance_report.dart';
 import 'mark_attendance.dart';
 
 class AttendanceTabScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    double screenWidth = MediaQuery.of(context).size.width;
-
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         appBar: PreferredSize(
-          preferredSize: Size.fromHeight(screenHeight * 0.06),
-          // Set AppBar height
-          child: AppBar(
-            bottom: TabBar(
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorWeight: 3,
-              labelStyle: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-              tabs: [
-                Tab(text: "Mark Attendance"),
-                Tab(text: "Report Attendance"),
-              ],
+          preferredSize: Size.fromHeight(70),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(00),
+                ),
+              ),
+              bottom: TabBar(
+                indicator: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                ),
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorWeight: 3,
+                labelColor: Colors.blueAccent,
+                unselectedLabelColor: Colors.black,
+                labelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                tabs: [
+                  Tab(text: "Mark Attendance".toUpperCase()),
+                  Tab(text: "Report Attendance".toUpperCase()),
+                ],
+              ),
             ),
           ),
         ),
-        body: Container(
-          width: double.infinity,
-          height: screenHeight * 0.85, // Set body height
-          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.00),
+        body: Padding(
+          padding: EdgeInsets.only(bottom: 5), // Bottom padding
           child: TabBarView(
             children: [
               AttendanceScreen(),
@@ -55,9 +52,3 @@ class AttendanceTabScreen extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
-

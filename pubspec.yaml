@@ -60,6 +60,8 @@ dependencies:
   syncfusion_flutter_datepicker: ^20.4.50
   pdf: ^3.10.4
   path_provider: ^2.1.1
+  open_filex: ^4.6.0
+
 
 dev_dependencies:
   flutter_test:
