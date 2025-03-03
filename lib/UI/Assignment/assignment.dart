@@ -1,13 +1,17 @@
+import 'package:cjmambalateacher/UI/Assignment/update_assignments.dart';
 import 'package:cjmambalateacher/UI/Assignment/upload_assignments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../CommonCalling/data_not_found.dart';
+import '../../CommonCalling/progressbarWhite.dart';
 import '../../HexColorCode/HexColor.dart';
 import '../../constants.dart';
 import '../Auth/login_screen.dart';
@@ -41,6 +45,9 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
   }
 
   Future<void> fetchAssignmentsData() async {
+    setState(() {
+      isLoading = true; // Show progress bar
+    });
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
     print("Token: $token");
@@ -58,10 +65,15 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
     if (response.statusCode == 200) {
       final jsonResponse = json.decode(response.body);
       setState(() {
-        assignments = jsonResponse['data']; // Update state with fetched data
+        assignments = jsonResponse['data'];
+        isLoading = false; // Stop progress bar
+// Update state with fetched data
       });
     } else {
       _showLoginDialog();
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -147,284 +159,208 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
 
         ],
       ),
-      body: assignments.isNotEmpty?
-
-
-      ListView.builder(
+      body:   isLoading
+          ? WhiteCircularProgressWidget()
+          : assignments.isEmpty
+          ? Center(
+          child: DataNotFoundWidget(
+            title: 'Assignments  Not Available.',
+          ))
+          : ListView.builder(
         itemCount: assignments.length,
         itemBuilder: (context, index) {
           final assignment = assignments[index];
           String description = html_parser.parse(assignment['description']).body?.text ?? '';
-          String startDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(assignment['start_date']));
+          String startDate = DateFormat('dd-MM-yyyy')
+              .format(DateTime.parse(assignment['start_date']));
           String endDate = DateFormat('dd-MM-yyyy').format(DateTime.parse(assignment['end_date']));
 
           return Card(
-            margin: EdgeInsets.all(5),
-            elevation: 4,
-            color: AppColors.secondary,
-            shadowColor: Colors.redAccent,
-
-
+            margin: EdgeInsets.symmetric(
+                vertical: 5.sp, horizontal: 5.sp),
+            elevation: 6,
+            color: Colors.grey.shade200,
+            // Light background
+            shadowColor: Colors.black26,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
-              side: BorderSide(
-                color: Colors.black, // Border color
-                width: 1,          // Border width
-              ),
             ),
             child: Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.all(15.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  /// **Title & Index**
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: [
-                          Container(
-                            height: 50,
-                            width: 50,
-                            decoration: BoxDecoration(
-                                color: AppColors.textwhite,
-                                borderRadius: BorderRadius.circular(25)
-                            ),
-                            child: Center(
-                              child: Text('${index+1}',
-                                style: GoogleFonts.montserrat(
-                                  textStyle: Theme.of(context).textTheme.displayLarge,
-                                  fontSize: 25,
-                                  fontWeight: FontWeight.w700,
-                                  fontStyle: FontStyle.normal,
-                                  color: AppColors.textblack,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-
-
-                              Text(
-                                assignment['title'].toString().toUpperCase(),
-                                style: GoogleFonts.montserrat(
-                                  textStyle: Theme.of(context).textTheme.displayLarge,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w600,
-                                  fontStyle: FontStyle.normal,
-                                  color: AppColors.textwhite,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              Container(
-                                width: MediaQuery.of(context).size.width*0.4,
-                                child: Text(
-                                  '${description}'.toUpperCase(),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis, // Add ellipsis for overflow
-                                  style: GoogleFonts.montserrat(
-                                    textStyle: Theme.of(context).textTheme.displayLarge,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    fontStyle: FontStyle.normal,
-                                    color: AppColors.grey,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Start : ${startDate}',
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '${index + 1}',
                             style: GoogleFonts.montserrat(
-                              textStyle: Theme.of(context).textTheme.displayLarge,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              fontStyle: FontStyle.normal,
-                              color: AppColors.textwhite,
-                            ),
-                          ),
-                          Text(
-                            'Due : ${endDate}',
-                            style: GoogleFonts.montserrat(
-                              textStyle: Theme.of(context).textTheme.displayLarge,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              fontStyle: FontStyle.normal,
-                              color: AppColors.textwhite,
-                            ),
-                          ),
-                        ],
-                      )
-
-
-
-                    ],
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          final Uri pdfUri = Uri.parse(assignment['attach_url'].toString());
-                          if (await canLaunchUrl(pdfUri)) {
-                            await launchUrl(pdfUri, mode: LaunchMode.externalApplication);
-                          } else {
-                            print("Could not launch $pdfUri");
-                          }
-
-                          // if (await canLaunchUrl(Uri.parse(assignment['attach'].toString()))) {
-                          // await launchUrl(Uri.parse(assignment['attach'].toString()));
-                          // } else {
-                          // throw 'Could not launch ${assignment['attach']}';
-                          // }
-                        },
-                          child: Container(
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color:Colors.orange,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black, // You can change the color as needed
-                                width: 1,
-                              ),
-                            ),
-                            child:  Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  'View'.toUpperCase(),
-                                  style: GoogleFonts.montserrat(
-                                    textStyle: Theme.of(context).textTheme.displayLarge,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    fontStyle: FontStyle.normal,
-                                    color: AppColors.textwhite,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-
-                      ),
-
-                      GestureDetector(
-                          onTap: (){
-
-                          },
-                          child:Container(
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color:Colors.blue,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: Colors.black, // You can change the color as needed
-                                width: 1,
-                              ),
-                            ),
-                            child:  Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  'UPDATE',
-                                  style: GoogleFonts.montserrat(
-                                    textStyle: Theme.of(context).textTheme.displayLarge,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    fontStyle: FontStyle.normal,
-                                    color: AppColors.textwhite,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-
-                      ),
-                      Center(
-                        child: GestureDetector(
-                          onTap: () => _showDeleteConfirmationDialog(assignment['id'].toString()), // Call delete confirmation
-                          child: Container(
-                            width: 100,
-                            decoration: BoxDecoration(
-                              color: Colors.redAccent,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: AppColors.textblack,
-                                width: 1,
-                              ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Text(
-                                  'DELETE'.toUpperCase(),
-                                  style: GoogleFonts.montserrat(
-                                    textStyle: Theme.of(context).textTheme.displayLarge,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    fontStyle: FontStyle.normal,
-                                    color: AppColors.textwhite,
-                                  ),
-                                ),
-                              ),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
                           ),
                         ),
                       ),
+                      SizedBox(width: 15),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              assignment['title']
+                                  .toString()
+                                  .toUpperCase(),
+                              style: GoogleFonts.montserrat(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            Text(
+                              description.toUpperCase(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: GoogleFonts.montserrat(
+                                fontSize: 13,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
 
+                  SizedBox(height: 10),
+
+                  /// **Dates**
+                  Row(
+                    mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildDateInfo('Start', startDate),
+                      _buildDateInfo('Due', endDate),
+                    ],
+                  ),
+
+                  SizedBox(height: 10.sp),
+
+                  Row(
+                    mainAxisAlignment:
+                    MainAxisAlignment.spaceBetween,
+                    children: [
+                      _buildButton(
+                        text: 'View',
+                        color: Colors.blueAccent,
+                        onTap: () async {
+                          final Uri pdfUri = Uri.parse(
+                              assignment['attach'].toString());
+                          if (await canLaunchUrl(pdfUri)) {
+                            await launchUrl(pdfUri,
+                                mode: LaunchMode
+                                    .externalApplication);
+                          } else {
+                            print("Could not launch $pdfUri");
+                          }
+                        },
+                      ),
+                      _buildButton(
+                        text: 'Update',
+                        color: Colors.orange,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) =>  AssignmentUpdateScreen(onReturn: _refresh)),
+                          );
+                        },
+                      ),
+
+                      _buildButton(
+                        text: 'DELETE',
+                        color: Colors.redAccent,
+                        onTap: () => _showDeleteConfirmationDialog(assignment['id'].toString()), // Call delete confirmation
+                      ),
 
 
                     ],
                   ),
-
-
                 ],
               ),
             ),
           );
         },
-      ):Container(
-          height: MediaQuery.of(context).size.height * 0.7, // 90% of screen height
-
-          child: Center(
-              child:
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-
-                children: [
-                  Image.asset('assets/no_attendance.png',filterQuality: FilterQuality.high,),
-                  Text('Assignments  Not Available.',
-                    style: GoogleFonts.montserrat(
-                      textStyle: Theme.of(context).textTheme.displayLarge,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
-                      fontStyle: FontStyle.normal,
-                      color: AppColors.textwhite,
-                    ),
-
-                  )
-                ],
-              )
-          )
       ),
+
+
+
+
+
+    );
+  }
+  /// **Reusable Widget for Date**
+  Widget _buildDateInfo(String label, String date) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.montserrat(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: Colors.grey[700],
+          ),
+        ),
+        Text(
+          date,
+          style: GoogleFonts.montserrat(
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            color: Colors.black87,
+          ),
+        ),
+      ],
     );
   }
 
+  /// **Reusable Button Widget**
+  Widget _buildButton(
+      {required String text,
+        required Color color,
+        required VoidCallback onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 100,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: Center(
+          child: Text(
+            text.toUpperCase(),
+            style: GoogleFonts.montserrat(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
   void _showDeleteConfirmationDialog(String assignmentId) {
     showDialog(
       context: context,
@@ -458,7 +394,7 @@ class _AssignmentListScreenState extends State<AssignmentListScreen> {
 
       String apiUrl = "${ApiRoutes.deleteAssignment}/$assignmentId"; // API URL
 
-      final response = await http.delete(
+      final response = await http.get(
         Uri.parse(apiUrl),
         headers: {
           "Authorization": "Bearer $token", // Include token

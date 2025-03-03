@@ -10,40 +10,24 @@ import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
-class AssignmentUploadScreen extends StatefulWidget {
+class AssignmentUpdateScreen extends StatefulWidget {
   final VoidCallback onReturn;
 
-  const AssignmentUploadScreen({super.key, required this.onReturn});
+  const AssignmentUpdateScreen({super.key, required this.onReturn});
 
   @override
   _AssignmentUploadScreenState createState() => _AssignmentUploadScreenState();
 }
 
-class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
+class _AssignmentUploadScreenState extends State<AssignmentUpdateScreen> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false; // Add this at the top of the class
 
-  // Dropdown values
-  String? selectedClass;
-  String? selectedSubject;
-  // 📌 **Dropdown Lists with ID and Name**
-  List<Map<String, String>> classList = [
-    {"id": "1", "name": "Class 10"},
-    {"id": "2", "name": "Class 11"},
-    {"id": "3", "name": "Class 12"},
-  ];
-
-  List<Map<String, String>> subjectList = [
-    {"id": "101", "name": "Math"},
-    {"id": "102", "name": "Science"},
-    {"id": "103", "name": "English"},
-  ];
 
 
 
-  // Date Pickers
-  DateTime? startDate;
-  DateTime? endDate;
+
+
 
   // File Upload
   File? selectedImage;
@@ -94,24 +78,6 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
 
 
   // Date Picker Function
-  Future<void> pickDate(BuildContext context, bool isStartDate) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
-    );
-
-    if (picked != null) {
-      setState(() {
-        if (isStartDate) {
-          startDate = picked;
-        } else {
-          endDate = picked;
-        }
-      });
-    }
-  }
 
 
   Future<void> uploadAssignmentApi() async {
@@ -123,26 +89,7 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
       return;
     }
 
-    if (selectedClass == null || selectedSubject == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please select a Class and Subject")),
-      );
-      return;
-    }
 
-    if (startDate == null || endDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please select start and end date")),
-      );
-      return;
-    }
-
-    if (selectedFile == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please attach a file before submitting")),
-      );
-      return;
-    }
 
     try {
       setState(() {
@@ -152,7 +99,7 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
       final token = prefs.getString('token');
       print("Token: $token");
 
-      String apiUrl = '${ApiRoutes.uploadAssignment}';
+      String apiUrl = ApiRoutes.uploadAssignment;
       var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
 
       // Add Headers
@@ -160,13 +107,8 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
       request.headers['Content-Type'] = 'multipart/form-data';
 
       // Add Form Fields
-      request.fields['class'] = selectedClass ?? "";
-      request.fields['subject'] = selectedSubject ?? "";
       request.fields['title'] = titleController.text;
-      request.fields['section'] = '1';
       request.fields['total_marks'] = totalMarksController.text;
-      request.fields['start_date'] = startDate?.toString().split(' ')[0] ?? "";
-      request.fields['end_date'] = endDate?.toString().split(' ')[0] ?? "";
       request.fields['description'] = descriptionController.text;
 
       // Attach File
@@ -192,7 +134,7 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
         widget.onReturn();
 
         Fluttertoast.showToast(
-          msg: "Assignment Uploaded Successfully!",
+          msg: "Assignment Update Successfully!",
           toastLength: Toast.LENGTH_LONG,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 1,
@@ -231,7 +173,7 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
       backgroundColor: AppColors.primary,
 
       appBar: AppBar(
-        title: Text("Upload Assignment",
+        title: Text("Update Assignment".toString().toUpperCase(),
             style: GoogleFonts.montserrat(
               textStyle: Theme.of(context).textTheme.displayLarge,
               fontSize: 18,
@@ -255,57 +197,16 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
                 children: [
                   SizedBox(height: 20),
 
-                  // 📌 Class & Subject Dropdowns
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDropdown("Select Class", classList, selectedClass, (value) {
-                          setState(() {
-                            selectedClass = value;
-                            print(selectedClass);
-                          });
-                        }),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: _buildDropdown("Select Subject", subjectList, selectedSubject, (value) {
-                          setState(() {
-                            selectedSubject = value;
-                            print(selectedSubject);
 
-                          });
-                        }),
-                      ),
-                    ],
-                  ),
 
-                  SizedBox(height: 20),
-
-                  // 📌 Start & End Date Pickers
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDateTile("Start Date", startDate, () => pickDate(context, true)),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: _buildDateTile("End Date", endDate, () => pickDate(context, false)),
-                      ),
-                    ],
-                  ),
                   SizedBox(height: 20,),
-                  // 📌 Title Field
                   _buildTextField("Title", titleController),
                   SizedBox(height: 20,),
 
-                  // 📌 Description Field
                   _buildTextField("Description", descriptionController, maxLines: 3),
 
                   SizedBox(height: 20),
 
-
-
-                  // 📌 Total Marks Field
                   _buildTextField("Total Marks", totalMarksController, keyboardType: TextInputType.number),
 
 
@@ -314,24 +215,7 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
 
                   SizedBox(height: 20),
 
-                  // 📌 Submit Button
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     if (_formKey.currentState!.validate()) {
-                  //       uploadAssignmentApi();
-                  //     } else {
-                  //       ScaffoldMessenger.of(context).showSnackBar(
-                  //         SnackBar(content: Text("Please fill all required fields")),
-                  //       );
-                  //     }
-                  //   },
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: Colors.orange,
-                  //     padding: EdgeInsets.symmetric(vertical: 14, horizontal: 50),
-                  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  //   ),
-                  //   child: Text("Upload Assignment", style: TextStyle(fontSize: 16, color: Colors.white)),
-                  // ),
+
 
                   ElevatedButton(
                     onPressed: isLoading ? null : uploadAssignmentApi, // Disable button when loading
@@ -349,7 +233,7 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
                         strokeWidth: 3,
                       ),
                     )
-                        : Text("Upload Assignment", style: TextStyle(fontSize: 16, color: Colors.white)),
+                        : Text("Update Assignment".toString().toUpperCase(), style: TextStyle(fontSize: 16, color: Colors.white)),
                   ),
 
 
@@ -466,17 +350,4 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
   }
 
 
-  Widget _buildUploadRow(String label, IconData icon, VoidCallback onTap, bool fileSelected) {
-    return Column(
-      children: [
-        // _buildSelectedFile(), // Display the selected file
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: pickFile,
-          child: Text("Pick File"),
-        ),
-      ],
-    );
-
-  }
 }

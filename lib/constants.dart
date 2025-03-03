@@ -19,20 +19,29 @@ class AppColors {
 class AppAssets {
   static const String logo = 'assets/images/logo.png'; 
   static const String cjm = 'assets/cjm.png';
+  static const String cjmlogo = 'assets/playstore.png';
 }
 
 class ApiRoutes {
   static const String baseUrl = "https://apicjm.cjmambala.co.in/api";
+  static const String baseUrl2 = "https://webcjm.cjmambala.co.in/api";
+
   // static const String baseUrl = "http://192.168.1.7/CJM/api";
   static const String login = "$baseUrl/teacher-login";
   static const String getProfile = "$baseUrl/teacher";
+  static const String getPhotos = "$baseUrl2/getPhotos";
+  static const String getVideos = "$baseUrl2/getVideos";
   static const String uploadAssignment = "$baseUrl/teacher-assignment";
-  static const String deleteAssignment = "$baseUrl/teacher-assignment";
+  static const String deleteAssignment = "$baseUrl/teacher-assignment-delete";
   static const String getDashboard = "$baseUrl/dashboard";
   static const String getFees = "$baseUrl/get-fees";
   static const String getAssignments = "$baseUrl/teacher-assignment";
-  static const String getTimeTable = "$baseUrl/teacher-subjects";
+  // static const String getTimeTable = "$baseUrl/teacher-subjects";
+  static const String getTimeTable = "$baseUrl/teacher-timetable?day=";
   static const String getSubject = "$baseUrl/get-subjects";
   static const String studentDashboard = "$baseUrl/dashboard";
   static const String attendance = "$baseUrl/get-attendance-monthly";
+  static const String events = "$baseUrl/events";
+  static const String getBanners = "$baseUrl/get-banners";
+  static const String notifications = "$baseUrl/teacher-notifications";
 }

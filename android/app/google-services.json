@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "754245911807",
+    "project_id": "cjm-ambala-tech",
+    "storage_bucket": "cjm-ambala-tech.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:754245911807:android:e0b151a25fe64e0ce5f8ca",
+        "android_client_info": {
+          "package_name": "com.cjmambalateacher.cjmambalateacher"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlVGVUHNMaPwx0ky5wiIVYERKadIXRvEU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

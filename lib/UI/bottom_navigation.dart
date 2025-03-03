@@ -273,7 +273,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                       ? NetworkImage(teacherData?['photo'])
                       : null,
                   child: teacherData == null || teacherData?['photo'] == null
-                      ? Image.asset(AppAssets.logo, fit: BoxFit.cover)
+                      ? Image.asset(AppAssets.cjmlogo, fit: BoxFit.cover)
                       : null,
 
                 ),
@@ -657,7 +657,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return NewsAndEventsScreen();
+                                    return CalendarScreen();
                                   },
                                 ),
                               );

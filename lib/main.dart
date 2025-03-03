@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../splash_sreen.dart';
 import 'UI/Auth/login_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -23,11 +24,11 @@ Future<void> main() async {
   Platform.isAndroid ? await Firebase.initializeApp(
     options: kIsWeb || Platform.isAndroid
         ? const FirebaseOptions(
-      apiKey: 'AIzaSyBhuh_2exvng2cYi1-WVG8AWFGFgLjRYQM',
-      appId: '1:1012918033516:android:0b6718b40f48b55cb84c49',
-      messagingSenderId: '1012918033516',
-      projectId: 'cjm-ambala',
-      storageBucket: "cjm-ambala.firebasestorage.app",
+      apiKey: 'AIzaSyDlVGVUHNMaPwx0ky5wiIVYERKadIXRvEU',
+      appId: '1:754245911807:android:e0b151a25fe64e0ce5f8ca',
+      messagingSenderId: '754245911807',
+      projectId: 'cjm-ambala-tech',
+      storageBucket: "cjm-ambala-tech.firebasestorage.app",
     )
         : null,
   ) : await Firebase.initializeApp();
@@ -41,10 +42,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+    return ScreenUtilInit(
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      // Use builder only if you need to use library outside ScreenUtilInit context
+      builder: (_ , child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          home:  SplashScreen(),
+        );
+      },
     );
+
   }
 }
 
