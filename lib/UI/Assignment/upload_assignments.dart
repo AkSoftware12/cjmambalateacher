@@ -1,14 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:cjmambalateacher/constants.dart';
+import 'package:cjmambalateacher/strings.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+
+import '../../HexColorCode/HexColor.dart';
 
 class AssignmentUploadScreen extends StatefulWidget {
   final VoidCallback onReturn;
@@ -22,22 +27,14 @@ class AssignmentUploadScreen extends StatefulWidget {
 class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false; // Add this at the top of the class
+  List<Map<String, dynamic>> classes = [];
+  List<Map<String,dynamic>> subject = [];
+  List<Map<String,dynamic>> section = [];
+  int? selectedClass;
+  int? selectedSubject;
+  int? selectedSection;
 
-  // Dropdown values
-  String? selectedClass;
-  String? selectedSubject;
-  // 📌 **Dropdown Lists with ID and Name**
-  List<Map<String, String>> classList = [
-    {"id": "1", "name": "Class 10"},
-    {"id": "2", "name": "Class 11"},
-    {"id": "3", "name": "Class 12"},
-  ];
 
-  List<Map<String, String>> subjectList = [
-    {"id": "101", "name": "Math"},
-    {"id": "102", "name": "Science"},
-    {"id": "103", "name": "English"},
-  ];
 
 
 
@@ -73,7 +70,7 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
-        allowedExtensions: ['jpg', 'png', 'pdf', 'doc', 'txt','xls','csv'],
+        allowedExtensions: ['jpg', 'png', 'pdf', 'doc', 'txt','xlsx','csv'],
       );
 
       if (result != null && result.files.single.path != null) {
@@ -112,6 +109,42 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
       });
     }
   }
+
+  Future<void> fetchClasses() async {
+
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? token = prefs.getString('token');
+
+      final response = await http.get(
+        Uri.parse(ApiRoutes.getTeacherSubject),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        setState(() {
+          classes = List<Map<String, dynamic>>.from(responseData['classes']);
+          subject = List<Map<String, dynamic>>.from(responseData['subjects']);
+          section = List<Map<String, dynamic>>.from(responseData['sections']);
+          // sections = List<Map<String, dynamic>>.from(responseData['data']['sections']);
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Failed to load class and section data');
+      }
+    } catch (e) {
+      print('Error fetching classes and sections: $e');
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+
 
 
   Future<void> uploadAssignmentApi() async {
@@ -160,10 +193,10 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
       request.headers['Content-Type'] = 'multipart/form-data';
 
       // Add Form Fields
-      request.fields['class'] = selectedClass ?? "";
-      request.fields['subject'] = selectedSubject ?? "";
+      request.fields['class'] = selectedClass.toString() ?? "";
+      request.fields['subject'] = selectedSubject.toString() ?? "";
       request.fields['title'] = titleController.text;
-      request.fields['section'] = '1';
+      request.fields['section'] = selectedSection.toString() ?? "";
       request.fields['total_marks'] = totalMarksController.text;
       request.fields['start_date'] = startDate?.toString().split(' ')[0] ?? "";
       request.fields['end_date'] = endDate?.toString().split(' ')[0] ?? "";
@@ -226,6 +259,13 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
 
 
   @override
+  void initState() {
+    super.initState();
+    fetchClasses();
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
@@ -240,12 +280,12 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
               color: AppColors.textblack,
             ),
         ),
-        backgroundColor: AppColors.primary,
+        backgroundColor:AppColors.primary,
         iconTheme: IconThemeData(color: AppColors.textblack,),
       ),
 
       body: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: EdgeInsets.all(0.0),
         child: SingleChildScrollView(
           child:Padding(
             padding: EdgeInsets.all(0),
@@ -253,103 +293,369 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
               key: _formKey,
               child: Column(
                 children: [
-                  SizedBox(height: 20),
 
-                  // 📌 Class & Subject Dropdowns
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDropdown("Select Class", classList, selectedClass, (value) {
-                          setState(() {
-                            selectedClass = value;
-                            print(selectedClass);
-                          });
-                        }),
+                  Container(
+                    decoration: BoxDecoration(
+                      // color:AppColors.primary,
+                      gradient: LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [Colors.grey.shade400, Colors.transparent], // Top red, fading down
                       ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: _buildDropdown("Select Subject", subjectList, selectedSubject, (value) {
-                          setState(() {
-                            selectedSubject = value;
-                            print(selectedSubject);
-
-                          });
-                        }),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 20),
-
-                  // 📌 Start & End Date Pickers
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildDateTile("Start Date", startDate, () => pickDate(context, true)),
-                      ),
-                      SizedBox(width: 10),
-                      Expanded(
-                        child: _buildDateTile("End Date", endDate, () => pickDate(context, false)),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20,),
-                  // 📌 Title Field
-                  _buildTextField("Title", titleController),
-                  SizedBox(height: 20,),
-
-                  // 📌 Description Field
-                  _buildTextField("Description", descriptionController, maxLines: 3),
-
-                  SizedBox(height: 20),
-
-
-
-                  // 📌 Total Marks Field
-                  _buildTextField("Total Marks", totalMarksController, keyboardType: TextInputType.number),
-
-
-                  SizedBox(height: 10),
-                  _buildSelectedFile("Attach PDF", Icons.picture_as_pdf, pickFile, selectedPdf != null),
-
-                  SizedBox(height: 20),
-
-                  // 📌 Submit Button
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     if (_formKey.currentState!.validate()) {
-                  //       uploadAssignmentApi();
-                  //     } else {
-                  //       ScaffoldMessenger.of(context).showSnackBar(
-                  //         SnackBar(content: Text("Please fill all required fields")),
-                  //       );
-                  //     }
-                  //   },
-                  //   style: ElevatedButton.styleFrom(
-                  //     backgroundColor: Colors.orange,
-                  //     padding: EdgeInsets.symmetric(vertical: 14, horizontal: 50),
-                  //     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                  //   ),
-                  //   child: Text("Upload Assignment", style: TextStyle(fontSize: 16, color: Colors.white)),
-                  // ),
-
-                  ElevatedButton(
-                    onPressed: isLoading ? null : uploadAssignmentApi, // Disable button when loading
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      padding: EdgeInsets.symmetric(vertical: 14, horizontal: 50),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(40.sp),topRight: Radius.circular(40.sp)),
                     ),
-                    child: isLoading
-                        ? SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: CircularProgressIndicator(
-                        color: Colors.white,
-                        strokeWidth: 3,
+                    child:Padding(
+                      padding:  EdgeInsets.all( 10.0),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 20.sp,),
+
+                          Container(
+                            width: double.infinity,
+                            height: 50.sp,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(0.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: DropdownButtonFormField<int>(
+                                      value: selectedClass,
+                                      decoration: const InputDecoration(
+                                        labelText: "Select Class",
+                                        border: InputBorder.none, // Removes the border
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+
+                                      ),
+
+                                      items: classes.map((c) {
+                                        return DropdownMenuItem<int>(
+                                          value: c["id"],
+                                          child: Text(c["class"]),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedClass = value;
+                                        });
+                                      },
+
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+
+
+                            ),
+                          ),
+
+                          SizedBox(height: 20),
+                          Container(
+                            height: 50.sp,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(0.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child:DropdownButtonFormField<int>(
+                                      value: selectedSection,
+                                      decoration: InputDecoration(
+                                        labelText: "Select Section",
+                                        border: InputBorder.none, // Removes the border
+
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                                      ),
+
+                                      items: section.map((c) {
+                                        return DropdownMenuItem<int>(
+                                          value: c["id"],
+                                          child: Text(c["section"]),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedSection = value;
+                                        });
+                                      },
+                                    ),
+
+                                  ),
+
+                                ],
+                              ),
+
+
+                            ),
+                          ),
+
+                          SizedBox(height: 20),
+
+                          // Section Dropdown (Only shows if a class is selected)
+
+                          Container(
+                            height: 50.sp,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(0.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: DropdownButtonFormField<int>(
+                                      value: selectedSubject,
+                                      decoration: InputDecoration(
+                                        labelText: "Select Subject",
+                                        border: InputBorder.none, // Removes the border
+
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                                      ),
+                                      items: subject.map((c) {
+                                        return DropdownMenuItem<int>(
+                                          value: c["id"],
+                                          child: Text(c["subject_name"]),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedSubject = value;
+                                        });
+                                      },
+                                    ),
+
+
+
+
+                                  ),
+
+                                ],
+                              ),
+
+
+                            ),
+                          ),
+
+                          SizedBox(height: 20),
+
+                          Container(
+                            height: 50.sp,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildDateTile("Start Date", startDate, () => pickDate(context, true)),
+                                  ),
+
+                                  Column(
+                                    children: [
+                                      Container(
+                                        width: 1.sp,
+                                        color: Colors.grey,
+                                        height: 50.sp,
+                                      )
+                                    ],
+
+                                  ),
+                                  Expanded(
+                                    child: _buildDateTile("End Date", endDate, () => pickDate(context, false)),
+                                  ),
+                                ],
+                              ),
+
+
+                            ),
+                          ),
+
+
+
+                          SizedBox(height: 20,),
+                          Container(
+                            width: double.infinity,
+                            height: 50.sp,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildTextField("Title", titleController),
+
+                                  ),
+
+                                ],
+                              ),
+
+
+                            ),
+                          ),
+                          SizedBox(height: 20),
+
+                          Container(
+                            width: double.infinity,
+                            height: 50.sp,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: _buildTextField("Total Marks", totalMarksController, keyboardType: TextInputType.number),
+
+
+                                  ),
+
+                                ],
+                              ),
+
+
+                            ),
+                          ),
+
+                          SizedBox(height: 20,),
+                          Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.blue.withOpacity(0.2),
+                                  blurRadius: 8,
+                                  spreadRadius: 2,
+                                  offset: const Offset(0, 1),
+                                ),
+                              ],
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(5.0),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child:   _buildTextField("Description", descriptionController, maxLines: 3),
+
+
+
+
+
+                                  ),
+
+                                ],
+                              ),
+
+
+                            ),
+                          ),
+
+
+
+                          SizedBox(height: 20),
+
+
+                          SizedBox(height: 10),
+                          _buildSelectedFile("Attach PDF", Icons.picture_as_pdf, pickFile, selectedPdf != null),
+
+                          SizedBox(height: 20),
+
+                          ElevatedButton(
+                            onPressed: isLoading ? null : uploadAssignmentApi, // Disable button when loading
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange,
+                              padding: EdgeInsets.symmetric(vertical: 14, horizontal: 50),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            ),
+                            child: isLoading
+                                ? SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 3,
+                              ),
+                            )
+                                : Text("Upload Assignment", style: TextStyle(fontSize: 16, color: Colors.white)),
+                          ),
+
+
+
+                        ],
                       ),
-                    )
-                        : Text("Upload Assignment", style: TextStyle(fontSize: 16, color: Colors.white)),
+                    ),
+
+
+
+
                   ),
 
 
@@ -364,39 +670,26 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
   }
 
   Widget _buildTextField(String label, TextEditingController controller, {int maxLines = 1, TextInputType? keyboardType}) {
-    return TextFormField(
-      controller: controller,
-      maxLines: maxLines,
-      keyboardType: keyboardType,
-      style: TextStyle(color: AppColors.textblack),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color:  AppColors.textblack),
-        filled: false,
-        fillColor:  AppColors.textblack,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+
+    child: TextFormField(
+        controller: controller,
+        maxLines: maxLines,
+        keyboardType: keyboardType,
+        style: const TextStyle(color: AppColors.textblack),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color:  AppColors.textblack),
+          border: InputBorder.none, // Removes the border
+          filled: false,
+          fillColor:  AppColors.textblack,
+        ),
+        validator: (value) => value!.isEmpty ? "Enter $label" : null,
       ),
-      validator: (value) => value!.isEmpty ? "Enter $label" : null,
     );
   }
 
-  Widget _buildDropdown(String label, List<Map<String, String>> items, String? selectedValue, ValueChanged<String?> onChanged) {
-    return DropdownButtonFormField<String>(
-      value: selectedValue, // ID is stored here
-      decoration: InputDecoration(
-        labelText: label,
-        filled: false,
-        fillColor: Colors.grey.shade800,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-      dropdownColor: AppColors.textwhite,
-      items: items.map((item) => DropdownMenuItem(
-        value: item['id'],  // Store the ID
-        child: Text(item['name']!, style: TextStyle(color: AppColors.textblack)), // Show the Name
-      )).toList(),
-      onChanged: onChanged,
-    );
-  }
   Widget _buildSelectedFile(String label, IconData icon, VoidCallback onTap, bool fileSelected) {
     return selectedFile != null
         ? Card(
@@ -440,43 +733,27 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
 
   Widget _buildDateTile(String label, DateTime? date, VoidCallback onTap) {
     return Container(
+      height: 50.sp,
       decoration: BoxDecoration(
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-          width: 1,
-          color: Colors.black
-        )
+
       ),
 
       child: ListTile(
-        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         title: Text(
           date != null ? date.toString().split(' ')[0] : label,
           style: TextStyle(
             color: AppColors.textblack,
-            fontSize: 16,
+            fontSize: 13.sp,
             fontWeight: FontWeight.w500,
           ),
         ),
-        trailing: Icon(Icons.calendar_today, color:AppColors.textblack,),
+        trailing: Icon(Icons.calendar_today, color:AppColors.textblack,size: 15.sp,),
         onTap: onTap,
       ),
     );
   }
 
-
-  Widget _buildUploadRow(String label, IconData icon, VoidCallback onTap, bool fileSelected) {
-    return Column(
-      children: [
-        // _buildSelectedFile(), // Display the selected file
-        SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: pickFile,
-          child: Text("Pick File"),
-        ),
-      ],
-    );
-
-  }
 }

@@ -21,8 +21,8 @@ class _WebViewExampleState extends State<WebViewExample> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        iconTheme: IconThemeData(color: Colors.white),
-        title: Text(widget.title,style: TextStyle(color: Colors.white),),
+        iconTheme: IconThemeData(color: Colors.black),
+        title: Text(widget.title,style: TextStyle(color: Colors.black),),
       ),
       body: WebView(
         initialUrl: widget.url, // Your URL here

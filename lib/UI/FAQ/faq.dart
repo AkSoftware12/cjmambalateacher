@@ -64,13 +64,13 @@ class _FaqScreenState extends State<FaqScreen> {
           ? null
           :  AppBar(
         backgroundColor: AppColors.primary,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
         title:  Text("FAQ",
           style: GoogleFonts.radioCanada(
             textStyle: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.normal,
-              color: Colors.white,
+              color: Colors.black,
             ),
           ),
 
@@ -80,14 +80,14 @@ class _FaqScreenState extends State<FaqScreen> {
 
       body: Stack(
         children: [
-          Center(
-            child: SizedBox(
-              child: Opacity(
-                opacity: 0.1, // Adjust the opacity value (0.0 to 1.0)
-                child: Image.asset(AppAssets.logo),
-              ),
-            ),
-          ),
+          // Center(
+          //   child: SizedBox(
+          //     child: Opacity(
+          //       opacity: 0.1, // Adjust the opacity value (0.0 to 1.0)
+          //       child: Image.asset(AppAssets.logo),
+          //     ),
+          //   ),
+          // ),
 
           ListView.builder(
             itemCount: faqData.length,

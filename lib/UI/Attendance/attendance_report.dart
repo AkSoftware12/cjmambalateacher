@@ -53,7 +53,7 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
       String? token = prefs.getString('token');
 
       final response = await http.get(
-        Uri.parse('https://apicjm.cjmambala.co.in/api/monthly-attendance'),
+        Uri.parse('${ApiRoutes.baseUrl}/monthly-attendance'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -91,14 +91,9 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token');
 
-      // String startDate =
-      //     "${selectedStartDate!.year}-${selectedStartDate!.month.toString().padLeft(2, '0')}-${selectedStartDate!.day.toString().padLeft(2, '0')}";
-      // String endDate =
-      //     "${selectedEndDate!.year}-${selectedEndDate!.month.toString().padLeft(2, '0')}-${selectedEndDate!.day.toString().padLeft(2, '0')}";
-
       final response = await http.get(
         Uri.parse(
-            'https://apicjm.cjmambala.co.in/api/monthly-attendance?class=$selectedClass&section=$selectedSection&start_date=$startDate&end_date=$endDate'),
+            '${ApiRoutes.baseUrl}/monthly-attendance?class=$selectedClass&section=$selectedSection&start_date=$startDate&end_date=$endDate'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -175,8 +170,11 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
                 height: 300,
                 child: SfDateRangePicker(
                   selectionMode: DateRangePickerSelectionMode.range,
-                  onSelectionChanged:
-                      (DateRangePickerSelectionChangedArgs args) {
+                  selectionTextStyle: TextStyle(
+                    color: Colors.white
+                  ),
+                  selectionShape: DateRangePickerSelectionShape.circle,
+                  onSelectionChanged: (DateRangePickerSelectionChangedArgs args) {
                     if (args.value is PickerDateRange) {
                       setState(() {
                         startDate = args.value.startDate;
@@ -186,6 +184,7 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
                   },
                 ),
               ),
+
               SizedBox(height: 10),
               ElevatedButton.icon(
                 onPressed: () {
@@ -217,12 +216,12 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
 
 
 
-  Future<void> generateAndOpenPdf(List<dynamic> students, List<String> dates) async {
+  Future<void> generateAndOpenPdf(List<dynamic> students1, List<String> dates1) async {
     final pdf = pw.Document();
 
     pdf.addPage(
       pw.Page(
-        pageFormat: PdfPageFormat.a4.landscape, // Landscape mode for better space
+        pageFormat: PdfPageFormat.a4.landscape,
         margin: pw.EdgeInsets.all(10),
         build: (pw.Context context) {
           return pw.Column(
@@ -239,72 +238,69 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
               ),
               pw.SizedBox(height: 5),
 
-              // Auto-sizing rows with multi-line support
-              pw.Expanded(
-                child: pw.TableHelper.fromTextArray(
-                  context: context,
-                  headerDecoration: pw.BoxDecoration(color: PdfColors.blue),
-                  headerHeight: 30,
-                  cellHeight:50, // Auto size rows
-                  cellAlignments: {
-                    0: pw.Alignment.center,
-                    1: pw.Alignment.center,
-                    2: pw.Alignment.center,
-                    3: pw.Alignment.centerLeft, // Name aligns to the left
-                    for (int i = 4; i < 4 + dates.length; i++) i: pw.Alignment.center,
-                    4 + dates.length: pw.Alignment.center,
-                    5 + dates.length: pw.Alignment.center,
-                    6 + dates.length: pw.Alignment.center,
-                    7 + dates.length: pw.Alignment.center,
-                    8 + dates.length: pw.Alignment.center,
-                  },
-                  headers: [
-                    "Sr No.",
-                    "Student ID",
-                    "Roll No",
-                    "Name",
-                    ...dates,
-                    "P", "A", "L", "H", "%" // Attendance summary
-                  ],
-                  data: students.asMap().entries.map((entry) {
-                    int index = entry.key + 1;
-                    var student = entry.value;
+              pw.TableHelper.fromTextArray(
+                context: context,
+                headerDecoration: pw.BoxDecoration(color: PdfColors.blue),
+                headerHeight: 30,
+                cellHeight: 50,
+                cellAlignments: {
+                  0: pw.Alignment.center,
+                  1: pw.Alignment.center,
+                  2: pw.Alignment.center,
+                  3: pw.Alignment.centerLeft,
+                  for (int i = 4; i < 4 + dates.length; i++) i: pw.Alignment.center,
+                  4 + dates.length: pw.Alignment.center,
+                  5 + dates.length: pw.Alignment.center,
+                  6 + dates.length: pw.Alignment.center,
+                  7 + dates.length: pw.Alignment.center,
+                  8 + dates.length: pw.Alignment.center,
+                },
+                headers: [
+                  "Sr No.",
+                  "Student ID",
+                  "Roll No",
+                  "Name",
+                  ...dates1,
+                  "P", "A", "L", "H", "%" // Attendance summary
+                ],
+                data: students1.asMap().entries.map((entry) {
+                  int index = entry.key + 1;
+                  var student = entry.value;
 
-                    int totalP = 0, totalA = 0, totalL = 0, totalH = 0;
-                    int totalDays = dates.length;
+                  int totalP = 0, totalA = 0, totalL = 0, totalH = 0;
+                  int totalDays = dates1.length;
 
-                    List<String> attendanceData = dates.map((date) {
-                      int? status = student["attendance"]?[date];
-                      if (status == 1) totalP++;
-                      if (status == 2) totalA++;
-                      if (status == 3) totalL++;
-                      if (status == 4) totalH++;
-                      return _mapAttendanceStatus(status);
-                    }).toList();
+                  List<String> attendanceData = dates1.map((date) {
+                    int? status = student["attendance"]?[date];
+                    if (status == 1) totalP++;
+                    if (status == 2) totalA++;
+                    if (status == 3) totalL++;
+                    if (status == 4) totalH++;
+                    return _mapAttendanceStatus(status);
+                  }).toList();
 
-                    double attendancePercentage = totalDays > 0 ? (totalP / totalDays) * 100 : 0;
+                  double attendancePercentage = totalDays > 0 ? (totalP / totalDays) * 100 : 0;
 
-                    return [
-                      index.toString(),
-                      student['student_id'].toString(),
-                      student['roll_no'].toString(),
-                      student["name"] ?? "Unknown",
-                      ...attendanceData,
-                      totalP.toString(),
-                      totalA.toString(),
-                      totalL.toString(),
-                      totalH.toString(),
-                      "${attendancePercentage.toStringAsFixed(1)}%"
-                    ];
-                  }).toList(),
+                  return [
+                    index.toString(),
+                    student['student_id'].toString(),
+                    student['roll_no'].toString(),
+                    student["name"] ?? "Unknown",
+                    ...attendanceData,
+                    totalP.toString(),
+                    totalA.toString(),
+                    totalL.toString(),
+                    totalH.toString(),
+                    "${attendancePercentage.toStringAsFixed(1)}%"
+                  ];
+                }).toList(),
 
-                  border: pw.TableBorder.all(width: 0.5),
-                  headerStyle: pw.TextStyle(
-                      fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.white),
-                  cellStyle: pw.TextStyle(fontSize: 9), // Adjusted font for better readability
-                  headerPadding: pw.EdgeInsets.symmetric(vertical: 6, horizontal: 5),
-                  cellPadding: pw.EdgeInsets.symmetric(vertical: 4, horizontal: 4), // Optimized padding
-                ),
+                border: pw.TableBorder.all(width: 0.5),
+                headerStyle: pw.TextStyle(
+                    fontSize: 10, fontWeight: pw.FontWeight.bold, color: PdfColors.white),
+                cellStyle: pw.TextStyle(fontSize: 9),
+                headerPadding: pw.EdgeInsets.symmetric(vertical: 6, horizontal: 5),
+                cellPadding: pw.EdgeInsets.symmetric(vertical: 4, horizontal: 4),
               ),
             ],
           );
@@ -314,11 +310,20 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
 
     // Save PDF
     final output = await getExternalStorageDirectory();
-    final file = File("${output!.path}/attendance_report.pdf");
+    final filePath = "${output!.path}/attendance_report.pdf";
+    final file = File(filePath);
+
+    // Purani file delete karna (agar chahiye toh)
+    if (await file.exists()) {
+      await file.delete();
+    }
+
     await file.writeAsBytes(await pdf.save());
 
+    print("Updated PDF with ${students1.length} students.");
+
     // Open PDF
-    OpenFilex.open(file.path);
+    OpenFilex.open(filePath);
   }
 
   @override

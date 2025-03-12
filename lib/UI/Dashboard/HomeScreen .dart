@@ -22,6 +22,7 @@ import '../Subject/subject.dart';
 import '../TimeTable/time_table.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import '../TimeTable/time_table_teacher.dart';
 import '../bottom_navigation.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -235,32 +236,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
 
-                  // SectionCard(
-                  //   title: 'Promotions',
-                  //   icon: Icons.local_offer,
-                  //   content: 'Special promotions and offers for the students.',
-                  //   color: AppColors.secondary,
-                  // ),
-                  // SectionCard(
-                  //   title: 'Assignments',
-                  //   icon: Icons.assignment,
-                  //   content: 'Assignments due this week and upcoming tasks.',
-                  //   color: AppColors.secondary,
-                  // ),
-                  // SectionCard(
-                  //   title: 'Fees',
-                  //   icon: Icons.monetization_on,
-                  //   content: 'Your upcoming fee payments and history.',
-                  //   color: AppColors.secondary,
-                  // ),
-                  // SectionCard(
-                  //   title: 'Calendar',
-                  //   icon: Icons.calendar_today,
-                  //   content: 'View and manage your schedule.',
-                  //   isCalendar: true,
-                  //   calendarController: calendarController,
-                  //   color: AppColors.secondary,
-                  // ),
+
                 ],
               ),
             ),
@@ -380,68 +356,149 @@ class _HomeScreenState extends State<HomeScreen> {
           return GestureDetector(
             onTap: () {
               if (items[index]['name'] == 'Assignments') {
+
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return AssignmentListScreen();
+                  PageRouteBuilder(
+                    transitionDuration: Duration(milliseconds: 500), // Animation Speed
+                    pageBuilder: (context, animation, secondaryAnimation) => AssignmentListScreen(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(1.0, 0.0); // Right to Left
+                      var end = Offset.zero;
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
                     },
                   ),
                 );
+
+
               } else if (items[index]['name'] == 'Subject') {
+
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return SubjectScreen();
+                  PageRouteBuilder(
+                    transitionDuration: Duration(milliseconds: 500), // Animation Speed
+                    pageBuilder: (context, animation, secondaryAnimation) => SubjectScreen(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(1.0, 0.0); // Right to Left
+                      var end = Offset.zero;
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
                     },
                   ),
                 );
+
+
               } else if (items[index]['name'] == 'Gallery') {
+
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return GalleryVideoTabScreen();
+                  PageRouteBuilder(
+                    transitionDuration: Duration(milliseconds: 500), // Animation Speed
+                    pageBuilder: (context, animation, secondaryAnimation) => GalleryVideoTabScreen(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(1.0, 0.0); // Right to Left
+                      var end = Offset.zero;
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
                     },
                   ),
                 );
+
+
               } else if (items[index]['name'] == 'Report Card') {
+
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return ReportCardScreen();
+                  PageRouteBuilder(
+                    transitionDuration: Duration(milliseconds: 500), // Animation Speed
+                    pageBuilder: (context, animation, secondaryAnimation) => ReportCardScreen(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(1.0, 0.0); // Right to Left
+                      var end = Offset.zero;
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
                     },
                   ),
                 );
+
+
               } else if (items[index]['name'] == 'News & Events') {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return CalendarScreen();
+                  PageRouteBuilder(
+                    transitionDuration: Duration(milliseconds: 500), // Animation Speed
+                    pageBuilder: (context, animation, secondaryAnimation) => CalendarScreen(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(1.0, 0.0); // Right to Left
+                      var end = Offset.zero;
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
                     },
                   ),
                 );
+
+
               } else if (items[index]['name'] == 'Time Table') {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return TimeTableScreen();
+                  PageRouteBuilder(
+                    transitionDuration: Duration(milliseconds: 500), // Animation Speed
+                    pageBuilder: (context, animation, secondaryAnimation) => TimeTableTeacherScreen(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(1.0, 0.0); // Right to Left
+                      var end = Offset.zero;
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
                     },
                   ),
                 );
+
+
               } else if (items[index]['name'] == 'Home Work') {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return HomeWorkScreen();
+                  PageRouteBuilder(
+                    transitionDuration: Duration(milliseconds: 500), // Animation Speed
+                    pageBuilder: (context, animation, secondaryAnimation) => HomeWorkScreen(),
+                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                      var begin = Offset(1.0, 0.0); // Right to Left
+                      var end = Offset.zero;
+                      var tween = Tween(begin: begin, end: end).chain(CurveTween(curve: Curves.easeInOut));
+
+                      return SlideTransition(
+                        position: animation.drive(tween),
+                        child: child,
+                      );
                     },
                   ),
                 );
+
+
               }
             },
             child: Padding(

@@ -88,12 +88,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
         title: Text(
           'Notifications',
           style: GoogleFonts.poppins(
-            color: Colors.white,
+            color: Colors.black,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
         ),
-        centerTitle: true,
+        centerTitle: false,
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -104,7 +104,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
         ),
         child: isLoading
-            ? const Center(child: CircularProgressIndicator())
+            ? const Center(child: CupertinoActivityIndicator(
+          radius: 20,
+          color: Colors.black54,
+        ))
             : RefreshIndicator(
           onRefresh: fetchSubjectData,
           child: ListView.builder(
@@ -128,7 +131,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       color: AppColors.primary.withOpacity(0.1),
                       shape: BoxShape.circle,
                     ),
-                    child:  Icon(Icons.notifications, color: AppColors.primary),
+                    child:  Icon(Icons.notifications, color: Colors.black54),
                   ),
                   title: Text(
                     notification['title'],

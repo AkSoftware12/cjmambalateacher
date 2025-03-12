@@ -78,18 +78,6 @@ class _TimeTableScreenState extends State<SubjectScreen> {
       ),
     );
   }
-  // Sample timetable data
-  // final List<Map<String, dynamic>> timeTable = [
-  //   {"day": "Monday", "subject": "Mathematics", "time": "9:00 AM - 10:00 AM"},
-  //   {"day": "Monday", "subject": "Science", "time": "10:15 AM - 11:15 AM"},
-  //   {"day": "Monday", "subject": "English", "time": "11:30 AM - 12:30 PM"},
-  //   {"day": "Tuesday", "subject": "History", "time": "9:00 AM - 10:00 AM"},
-  //   {"day": "Tuesday", "subject": "Geography", "time": "10:15 AM - 11:15 AM"},
-  //   {"day": "Tuesday", "subject": "Physics", "time": "11:30 AM - 12:30 PM"},
-  //   {"day": "Wednesday", "subject": "Chemistry", "time": "9:00 AM - 10:00 AM"},
-  //   {"day": "Wednesday", "subject": "Biology", "time": "10:15 AM - 11:15 AM"},
-  //   {"day": "Wednesday", "subject": "Physical Education", "time": "11:30 AM - 12:30 PM"},
-  // ];
 
   @override
   Widget build(BuildContext context) {

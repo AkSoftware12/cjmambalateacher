@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cjmambalateacher/constants.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
@@ -11,9 +12,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class AssignmentUpdateScreen extends StatefulWidget {
+  final int id;
+  final String startDate;
+  final String title;
+  final String descripation;
+  final String marks;
+  final String endDate;
   final VoidCallback onReturn;
 
-  const AssignmentUpdateScreen({super.key, required this.onReturn});
+  const AssignmentUpdateScreen({super.key, required this.onReturn,required this.id, required this.startDate, required this.endDate, required this.title, required this.descripation, required this.marks});
 
   @override
   _AssignmentUploadScreenState createState() => _AssignmentUploadScreenState();
@@ -81,15 +88,6 @@ class _AssignmentUploadScreenState extends State<AssignmentUpdateScreen> {
 
 
   Future<void> uploadAssignmentApi() async {
-    if (!_formKey.currentState!.validate()) {
-      // If form validation fails, show an error message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Please fill all fields correctly!")),
-      );
-      return;
-    }
-
-
 
     try {
       setState(() {
@@ -99,7 +97,7 @@ class _AssignmentUploadScreenState extends State<AssignmentUpdateScreen> {
       final token = prefs.getString('token');
       print("Token: $token");
 
-      String apiUrl = ApiRoutes.uploadAssignment;
+      String apiUrl = '${ApiRoutes.uploadAssignment}${'/'}${widget.id}';
       var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
 
       // Add Headers
@@ -110,15 +108,21 @@ class _AssignmentUploadScreenState extends State<AssignmentUpdateScreen> {
       request.fields['title'] = titleController.text;
       request.fields['total_marks'] = totalMarksController.text;
       request.fields['description'] = descriptionController.text;
+      request.fields['start_date'] = widget.startDate.toString().split(' ')[0];
+      request.fields['end_date'] = widget.endDate.toString().split(' ')[0];
+      request.fields['status'] = 1.toString();
 
       // Attach File
-      request.files.add(
-        await http.MultipartFile.fromPath(
-          'attach',
-          selectedFile!.path,
-          filename: selectedFile!.path.split('/').last,
-        ),
-      );
+
+      if (selectedFile != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            'attach',
+            selectedFile!.path,
+            filename: selectedFile!.path.split('/').last,
+          ),
+        );      }
+
 
       // Send Request
       var response = await request.send();
@@ -136,11 +140,11 @@ class _AssignmentUploadScreenState extends State<AssignmentUpdateScreen> {
         Fluttertoast.showToast(
           msg: "Assignment Update Successfully!",
           toastLength: Toast.LENGTH_LONG,
-          gravity: ToastGravity.CENTER,
+          gravity: ToastGravity.BOTTOM,
           timeInSecForIosWeb: 1,
           backgroundColor: Colors.green,
           textColor: Colors.white,
-          fontSize: 22.0,
+          fontSize: 16.0,
         );
 
         // Navigate back after a short delay
@@ -164,6 +168,17 @@ class _AssignmentUploadScreenState extends State<AssignmentUpdateScreen> {
         isLoading = false; // Hide loader on error
       });
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      titleController.text= widget.title;
+      descriptionController.text= widget.descripation;
+      totalMarksController.text= widget.marks;
+    });
+
   }
 
 
@@ -195,7 +210,10 @@ class _AssignmentUploadScreenState extends State<AssignmentUpdateScreen> {
               key: _formKey,
               child: Column(
                 children: [
-                  SizedBox(height: 20),
+
+
+
+
 
 
 
@@ -264,23 +282,6 @@ class _AssignmentUploadScreenState extends State<AssignmentUpdateScreen> {
     );
   }
 
-  Widget _buildDropdown(String label, List<Map<String, String>> items, String? selectedValue, ValueChanged<String?> onChanged) {
-    return DropdownButtonFormField<String>(
-      value: selectedValue, // ID is stored here
-      decoration: InputDecoration(
-        labelText: label,
-        filled: false,
-        fillColor: Colors.grey.shade800,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-      dropdownColor: AppColors.textwhite,
-      items: items.map((item) => DropdownMenuItem(
-        value: item['id'],  // Store the ID
-        child: Text(item['name']!, style: TextStyle(color: AppColors.textblack)), // Show the Name
-      )).toList(),
-      onChanged: onChanged,
-    );
-  }
   Widget _buildSelectedFile(String label, IconData icon, VoidCallback onTap, bool fileSelected) {
     return selectedFile != null
         ? Card(

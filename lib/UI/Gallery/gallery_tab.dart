@@ -34,14 +34,14 @@ class _GalleryVideoTabScreenState extends State<GalleryVideoTabScreen>
       backgroundColor: AppColors.primary,
       appBar: AppBar(
         backgroundColor: AppColors.primary,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
         title: Text("Gallery & Video Gallery",
           style: GoogleFonts.montserrat(
             textStyle: Theme.of(context).textTheme.displayLarge,
             fontSize: 18,
             fontWeight: FontWeight.w600,
             fontStyle: FontStyle.normal,
-            color: AppColors.textwhite,
+            color: AppColors.textblack,
           ),
 
         ),
@@ -49,9 +49,9 @@ class _GalleryVideoTabScreenState extends State<GalleryVideoTabScreen>
           preferredSize: Size.fromHeight(50), // Adjust the height as needed
           child: TabBar(
             controller: _tabController,
-            indicatorColor: Colors.white, // Customize the indicator color
-            labelColor: Colors.white, // Customize the selected tab label color
-            unselectedLabelColor: Colors.grey.shade800, // Customize the unselected tab label color
+            indicatorColor: Colors.orangeAccent, // Customize the indicator color
+            labelColor: Colors.orangeAccent, // Customize the selected tab label color
+            unselectedLabelColor: Colors.black, // Customize the unselected tab label color
             indicatorWeight: 3.0, // Thickness of the indicator
             tabs: const [
               Tab(

@@ -16,10 +16,15 @@ class ReportCardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.primary,
+
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
         title: Text(
           'Report Card',
-          style: GoogleFonts.montserrat(),
+
+          style: TextStyle(
+            color: Colors.black
+          )
         ),
         backgroundColor: AppColors.primary,
       ),
@@ -31,7 +36,7 @@ class ReportCardScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16.0),
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: Colors.black,
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: Column(

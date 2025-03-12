@@ -21,6 +21,7 @@ import 'Notification/notification.dart';
 import 'Profile/ProfileScreen.dart';
 import 'Report/report_card.dart';
 import 'TimeTable/time_table.dart';
+import 'TimeTable/time_table_teacher.dart';
 import 'WebView/webview.dart';
 
 class BottomNavBarScreen extends StatefulWidget {
@@ -216,8 +217,8 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: AppColors.primary,
-        selectedItemColor: AppColors.textblack,
-        unselectedItemColor: AppColors.grey,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: AppColors.textblack,
           showSelectedLabels: true,  // ✅ Ensures selected labels are always visible
           showUnselectedLabels: true, // ✅ Ensures unselected labels are also visible
           type: BottomNavigationBarType.fixed,
@@ -236,6 +237,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
             icon: Icon(CupertinoIcons.book_fill),
             label: AppStrings.libraryLabel,
             backgroundColor: AppColors.primary,
+
           ),
 
           BottomNavigationBarItem(
@@ -448,56 +450,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                             ),
                           ),
 
-                          ListTile(
-                            title: Text(
-                              'Fees',
-                              style: GoogleFonts.cabin(
-                                textStyle: TextStyle(
-                                    color:AppColors.textblack,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
-                              ),
-                            ),
-                            trailing: Container(
-                              height: 20,
-                              width: 20,
-                              color: AppColors.primary,
-                              child: Icon(Icons.currency_rupee,color:AppColors.textblack,)
 
-
-                              // Image.asset(
-                              //   'assets/assignments.png',
-                              //   height: 80, // Adjust the size as needed
-                              //   width: 80,
-                              // ),
-
-                            ),
-                            onTap: () {
-                              Navigator.pop(context);
-
-                              // Navigate to the Profile screen in the BottomNavigationBar
-                              setState(() {
-                                _selectedIndex = 3; // Index of the Profile screen in _screens
-                              });
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) {
-                              //       return DownloadPdf();
-                              //     },
-                              //   ),
-                              // );
-                            },
-                          ),
-                          Padding(
-                            padding:
-                            EdgeInsets.only(left: 8, right: 8),
-                            child: Divider(
-                              height: 1,
-                              color: Colors.grey.shade300,
-                              thickness: 1,
-                            ),
-                          ),
 
                           ListTile(
                             title: Text(
@@ -525,7 +478,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) {
-                                    return TimeTableScreen();
+                                    return TimeTableTeacherScreen();
                                   },
                                 ),
                               );
@@ -773,7 +726,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                     return WebViewExample(
                                       title: 'Privacy',
                                       url:
-                                      'https://ksadmission.in/privacy-policy',
+                                      'https://www.freeprivacypolicy.com/live/79492741-6341-4ea2-a3b1-87ffc1154bda',
                                     );
                                   },
                                 ),
@@ -814,7 +767,7 @@ class _BottomNavBarScreenState extends State<BottomNavBarScreen> {
                                     return WebViewExample(
                                       title: 'Terms & Condition',
                                       url:
-                                      'https://ksadmission.in/privacy-policy',
+                                      'https://www.freeprivacypolicy.com/live/79492741-6341-4ea2-a3b1-87ffc1154bda',
                                     );
                                   },
                                 ),

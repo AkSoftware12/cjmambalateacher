@@ -214,12 +214,10 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 buildProfileRow('Date of Birth', teacherData?['dob']??''),
                 buildProfileRow('Qualification', teacherData?['qualification']??''),
                 buildProfileRow('Experience', teacherData?['experience']??''),
-                buildProfileRow(
-                  'Gender',
-                  teacherData?['gender'] == '1' ? 'Male' : 'Female',
+                buildProfileRow('Gender', teacherData?['gender'] == '1' ? 'Male' : 'Female',
                 ),
                 buildProfileRow('Nationality', teacherData?['nationality']?? ''),
-                buildProfileRow('Blood Group', teacherData?['blood_group']??''),
+                buildProfileRow('Blood Group', teacherData?['blood_group'].toString()??''),
               ]),
               // const SizedBox(height: 20),
               // _buildAnimatedSection('Academic Information', [

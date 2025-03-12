@@ -124,7 +124,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
       // backgroundColor: HexColor('#c0d4f2'),
       backgroundColor: AppColors.primary,
       appBar: AppBar(
-          iconTheme: IconThemeData(color: AppColors.textwhite),
+          iconTheme: IconThemeData(color: AppColors.textblack),
           backgroundColor: AppColors.primary,
           // backgroundColor: HexColor('#c0d4f2'),
           title: Text(
@@ -134,7 +134,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               fontSize: 20,
               fontWeight: FontWeight.w600,
               fontStyle: FontStyle.normal,
-              color: AppColors.textwhite,
+              color: AppColors.textblack,
             ),
           )),
       body: SingleChildScrollView(
@@ -146,7 +146,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               height:  MediaQuery.of(context).size.height* 0.99,
               decoration: BoxDecoration(
                 color: HexColor('#dfe6f1'),
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(30.sp),topRight: Radius.circular(30.sp)),
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(40.sp),topRight: Radius.circular(40.sp)),
               ),
               child:Column(
                 children: [
@@ -172,7 +172,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                               padding: EdgeInsets.symmetric(horizontal: 15.sp, vertical: 15.sp),
                               margin: const EdgeInsets.symmetric(horizontal: 5),
                               decoration: BoxDecoration(
-                                color: isSelected ? HexColor('#93a0e8') : Colors.grey[300],
+                                color: isSelected ? HexColor('#93a0e8') : Colors.black26,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Center(
@@ -181,7 +181,8 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                   style: TextStyle(
                                     fontSize: 15.sp,
                                     fontWeight: FontWeight.bold,
-                                    color: isSelected ? Colors.white : HexColor('#515992'),
+                                    color:  Colors.white ,
+                                    // color: isSelected ? Colors.white : HexColor('#515992'),
                                   ),
                                 ),
                               ),
@@ -409,19 +410,22 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   }
   Widget _buildRow(String title, String value, IconData icon, Color color) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: GoogleFonts.cabin(
-              fontSize: 15.sp,
-              fontWeight: FontWeight.w900,
-              color: HexColor('#515992'),
+      padding:  EdgeInsets.only(top: 10.sp,),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: GoogleFonts.cabin(
+                fontSize: 15.sp,
+                fontWeight: FontWeight.w900,
+                color: HexColor('#515992'),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

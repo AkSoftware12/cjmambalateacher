@@ -1,5 +1,8 @@
 
+import 'package:cjmambalateacher/constants.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -56,7 +59,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
       final response = await http.get(
         Uri.parse(
-            'https://apicjm.cjmambala.co.in/api/teacher-student-atttendance?class=$selectedClass'),
+            '${ApiRoutes.baseUrl}/teacher-student-atttendance?class=$selectedClass'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -94,7 +97,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
       final response = await http.get(
         Uri.parse(
-            'https://apicjm.cjmambala.co.in/api/teacher-student-atttendance?class=$selectedClass&section=$selectedSection&date=${DateFormat('yyyy-MM-dd').format(selectedDate)}'),
+            '${ApiRoutes.baseUrl}/teacher-student-atttendance?class=$selectedClass&section=$selectedSection&date=${DateFormat('yyyy-MM-dd').format(selectedDate)}'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -141,7 +144,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? token = prefs.getString('token'); // Fetch stored token
 
-      final String url = "https://apicjm.cjmambala.co.in/api/mark-attendance";
+      final String url = "${ApiRoutes.baseUrl}/mark-attendance";
 
       // Create MultipartRequest
       var request = http.MultipartRequest('POST', Uri.parse(url));
@@ -232,7 +235,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? Center(child: CupertinoActivityIndicator(
+        radius: 20,
+        color: Colors.black54,
+      ))
           : Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -384,7 +390,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                     // Light blue header
                     border: TableBorder.all(color: Colors.grey.shade300),
                     // Add border to table
-                    columns: [
+                    columns: const [
                       DataColumn(
                         label: Text('Student ID',
                             style: TextStyle(
@@ -482,17 +488,29 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
             ),
 
             // **Submit Button**
-            ElevatedButton(
-              onPressed: () {
-                print("Students: $studentIds");
-                print("Attendances: $attendances");
-                submitAttendance();
-              },
-              child: Text("Submit Attendance"),
-            ),
+
           ],
         ),
       ),
+      floatingActionButton:   Align(
+        alignment: Alignment.bottomCenter,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary, // Set your desired color
+          ),
+
+          onPressed: () {
+            print("Students: $studentIds");
+            print("Attendances: $attendances");
+            submitAttendance();
+          },
+          child: Text("Submit Attendance".toUpperCase(),style: TextStyle(
+              color: AppColors.textblack
+          ),),
+
+        ),
+      ),
+
     );
   }
 

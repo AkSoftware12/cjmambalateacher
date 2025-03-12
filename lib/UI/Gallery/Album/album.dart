@@ -69,6 +69,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return isLoading
         ? WhiteCircularProgressWidget()
         : images.isEmpty
@@ -85,7 +86,8 @@ class _GalleryScreenState extends State<GalleryScreen> {
       shrinkWrap: true, // Fix overflow issue
       physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
-        return GestureDetector(
+        return
+          GestureDetector(
           onTap: (){
             Navigator.push(
               context,

@@ -39,13 +39,13 @@ class _DoubtSessionState extends State<HelpScreen> {
           ? null
           :  AppBar(
         backgroundColor: AppColors.primary,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: IconThemeData(color: Colors.black),
         title:  Text("Help",
           style: GoogleFonts.radioCanada(
             textStyle: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.normal,
-              color: Colors.white,
+              color: Colors.black,
             ),
           ),
 
@@ -58,16 +58,16 @@ class _DoubtSessionState extends State<HelpScreen> {
         color: Colors.white,
         child: Stack(
           children: [
-            Center(
-              child: SizedBox(
-                // height: 150.sp,
-                width: double.infinity,
-                child: Opacity(
-                  opacity: 0.1, // Adjust the opacity value (0.0 to 1.0)
-                  child: Image.asset(AppAssets.logo),
-                ),
-              ),
-            ),
+            // Center(
+            //   child: SizedBox(
+            //     // height: 150.sp,
+            //     width: double.infinity,
+            //     child: Opacity(
+            //       opacity: 0.1, // Adjust the opacity value (0.0 to 1.0)
+            //       child: Image.asset(AppAssets.logo),
+            //     ),
+            //   ),
+            // ),
 
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -120,7 +120,7 @@ class _DoubtSessionState extends State<HelpScreen> {
                           height: 40,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(10), // Adjust the radius to make it more or less rounded
-                            color: AppColors.primary, // Set your desired color
+                            color: Colors.blue, // Set your desired color
                           ),
 
                           child: Center(
