@@ -577,14 +577,14 @@ class _MonthlyAttendanceScreenState extends State<MonthlyAttendanceScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.blue.shade200,
-        onPressed: (){
-          generateAndOpenPdf(students, dates);
-
-        },
-        child: Icon(Icons.picture_as_pdf,color: Colors.white,),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   backgroundColor: Colors.blue.shade200,
+      //   onPressed: (){
+      //     generateAndOpenPdf(students, dates);
+      //
+      //   },
+      //   child: Icon(Icons.picture_as_pdf,color: Colors.white,),
+      // ),
     );
   }
 }

@@ -342,7 +342,7 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
                                       items: classes.map((c) {
                                         return DropdownMenuItem<int>(
                                           value: c["id"],
-                                          child: Text(c["class"]),
+                                          child: Text(c["title"].toString()),
                                         );
                                       }).toList(),
                                       onChanged: (value) {
@@ -394,7 +394,7 @@ class _AssignmentUploadScreenState extends State<AssignmentUploadScreen> {
                                       items: section.map((c) {
                                         return DropdownMenuItem<int>(
                                           value: c["id"],
-                                          child: Text(c["section"]),
+                                          child: Text(c["title"].toString()),
                                         );
                                       }).toList(),
                                       onChanged: (value) {

@@ -1,4 +1,5 @@
 import 'package:cjmambalateacher/UI/Assignment/view_assignment_detail.dart';
+import 'package:cjmambalateacher/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -22,7 +23,7 @@ class _AssignmentDetailScreenState extends State<AssignmentDetailScreen> {
     final token = prefs.getString('token');
     final response = await http.get(
       Uri.parse(
-          'https://apicjm.cjmshimla.in/api/teacher-assignment/$assignmentId'),
+          '${ApiRoutes.baseUrl}/teacher-assignment/$assignmentId'),
       headers: {
         'Authorization': 'Bearer $token',
         'Content-Type': 'application/json',
